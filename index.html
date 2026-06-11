@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Рейтинг студентов</title>
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #111827;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 22px 0 40px;
+    }
+    .page { width: min(92vw, 460px); }
+    .card {
+      position: relative;
+      z-index: 2;
+      background: #ffffff;
+      width: 100%;
+      padding: clamp(18px, 4vw, 24px);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.20);
+      animation: fade .35s ease;
+      text-align: center;
+      color: #111827;
+    }
+    @keyframes fade { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+    .topBar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+    h1 { margin: 0; font-size: 26px; line-height: 1.15; letter-spacing: -0.6px; text-align:left; }
+    .yearSelect {
+      flex: 0 0 auto;
+      border: 1px solid #e5e7eb;
+      outline: none;
+      background: #f9fafb;
+      color: #111827;
+      border-radius: 14px;
+      padding: 10px 9px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      max-width: 126px;
+    }
+    .yearSelect:focus { border-color: #7c3aed; background:#fff; box-shadow: 0 0 0 4px rgba(124,58,237,.13); }
+    .search { display: grid; gap: 10px; }
+    input {
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      outline: none;
+      background: #f9fafb;
+      color: #111827;
+      border-radius: 16px;
+      padding: 15px 14px;
+      font-size: 16px;
+      font-weight: 650;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    input:focus { border-color: #7c3aed; background:#fff; box-shadow: 0 0 0 4px rgba(124,58,237,.13); }
+    input::placeholder { color: #9ca3af; font-weight: 600; }
+    .actions { display:grid; grid-template-columns: 1fr; gap: 10px; }
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 15px 16px;
+      background: linear-gradient(135deg, #4338ca 0%, #7c3aed 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(79,70,229,.26);
+      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+    }
+    button:hover { filter: brightness(1.04); box-shadow: 0 15px 30px rgba(91,33,182,.28); }
+    button:active { transform: scale(.98); }
+    button:disabled { opacity: .65; cursor: not-allowed; }
+    .groupBtn {
+      background: #ffffff;
+      color: #4f46e5;
+      border: 1px solid rgba(99,102,241,.24);
+      box-shadow: 0 10px 22px rgba(0,0,0,.10);
+    }
+    .miniStats {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .mini {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 10px 6px;
+    }
+    .mini b { display:block; font-size: 16px; color:#111827; }
+    .mini span { display:block; margin-top: 2px; font-size: 10px; color:#6b7280; font-weight:700; }
+    .results { display: grid; gap: 12px; margin-top: 14px; }
+    .resultCard {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.16);
+      color:#111827;
+      animation: fade .28s ease;
+    }
+    .empty { text-align:center; color:#6b7280; font-weight:650; }
+    .moreBox { display:grid; gap:10px; margin-top: 2px; }
+    .moreInfo { text-align:center; color:#6b7280; font-size:13px; font-weight:800; }
+    .moreBtn {
+      background: #ffffff;
+      color: #4f46e5;
+      border: 1px solid rgba(99,102,241,.22);
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    }
+    .moreBtn:hover { box-shadow: 0 14px 26px rgba(0,0,0,.16); }
+    .studentTop { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .studentName { text-align:left; font-weight:900; line-height:1.18; font-size:17px; letter-spacing:-.2px; }
+    .studentMeta { text-align:left; margin-top:5px; color:#6b7280; font-size:12px; font-weight:700; }
+    .rank {
+      min-width: 86px;
+      flex: 0 0 auto;
+      border-radius: 15px;
+      background: #eef2ff;
+      color: #4f46e5;
+      border: 1px solid rgba(99,102,241,.18);
+      padding: 9px 8px;
+      text-align: center;
+      font-weight: 900;
+    }
+    .rank b { display:block; font-size: 19px; line-height:1; }
+    .rank span { display:block; margin-top:3px; font-size:10px; color:#6366f1; }
+    .grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+    .cell { background:#f9fafb; border:1px solid #e5e7eb; border-radius:14px; padding:11px 10px; }
+    .cell span { display:block; font-size:10px; color:#6b7280; font-weight:800; margin-bottom:4px; }
+    .cell b { display:block; font-size:15px; color:#111827; }
+    .groupCard {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.01);
+      text-align:left;
+    }
+    .groupName { font-size:18px; font-weight:900; color:#111827; line-height:1.1; }
+    .groupMeta { margin-top:5px; color:#6b7280; font-size:12px; font-weight:800; }
+    .groupPill {
+      flex: 0 0 auto;
+      border-radius: 14px;
+      padding: 10px 12px;
+      min-width: 72px;
+      background:#eef2ff;
+      color:#4f46e5;
+      text-align:center;
+      font-size:18px;
+      font-weight:900;
+      border: 1px solid rgba(99,102,241,.18);
+    }
+
+    .suggestions {
+      display: none;
+      margin-top: -2px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(17,24,39,.10);
+      text-align: left;
+    }
+    .suggestions.show { display: block; }
+    .suggestionItem {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #f3f4f6;
+      background: #fff;
+      color: #111827;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 12px 14px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    .suggestionItem:last-child { border-bottom: 0; }
+    .suggestionItem:hover { filter: none; background: #f9fafb; box-shadow: none; }
+    .suggestionItem:active { transform: none; }
+    .suggestionName { font-weight: 900; color: #111827; }
+    .suggestionCount { font-size: 12px; color: #4f46e5; font-weight: 900; background: #eef2ff; border-radius: 999px; padding: 5px 8px; }
+
+
+    .calcHeaderBtn {
+      width: auto;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #4f46e5;
+      border: 1px solid rgba(99,102,241,.24);
+      box-shadow: 0 10px 22px rgba(0,0,0,.10);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .mainTitle { margin-bottom: 14px; }
+    .calcPage {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      overflow-y: auto;
+      background: #f2f4f8;
+      color: #1f2937;
+      padding: 18px;
+    }
+    .calcPage[hidden] { display: none; }
+    .calcApp {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .calcNav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .calcBackBtn {
+      width: auto;
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      padding: 12px 14px;
+      border-radius: 16px;
+    }
+    .calcPage .calcTop { margin-bottom: 18px; }
+    .calcPage h2 {
+      font-size: 30px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+    }
+    .calcSubtitle {
+      color: #6b7280;
+      font-size: 15px;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .calcResultCard {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+    }
+    .calcResultTitle {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .calcGpa {
+      font-size: 42px;
+      font-weight: 900;
+      color: #22963f;
+      margin-bottom: 8px;
+    }
+    .calcSmallInfo {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+    .calcSubjects {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .calcSubject {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      border: 1px solid #e5e7eb;
+    }
+    .calcSubjectHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .calcSubjectTitle {
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .calcDeleteBtn {
+      border: none;
+      background: #fee2e2;
+      color: #b91c1c;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      box-shadow: none;
+    }
+    .calcGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .calcPage label {
+      display: block;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .calcGradeBadge {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    .calcButtons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .calcPage .calcAddBtn {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(37,99,235,.20);
+    }
+    .calcPage .calcClearBtn {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: none;
+    }
+    .calcTableCard {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+    }
+    .calcTableTitle {
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    .calcPage table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .calcPage th, .calcPage td {
+      padding: 10px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    .calcPage th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+    .calcGreen { color: #22963f; font-weight: 800; }
+    .calcOrange { color: #b7791f; font-weight: 800; }
+    .calcRed { color: #dc2626; font-weight: 800; }
+    @media (max-width: 520px) {
+      .topBar { gap: 8px; }
+      .calcHeaderBtn { font-size: 12px; padding: 9px 9px; }
+      .calcPage { padding: 14px; }
+      .calcPage h2 { font-size: 28px; }
+      .calcGrid { grid-template-columns: 1fr; }
+      .calcButtons { grid-template-columns: 1fr; }
+      .calcGpa { font-size: 38px; }
+    }
+
+    #tgFrame { display:none; width:0; height:0; border:0; }
+    @media (max-width: 420px) {
+      body { padding-top: 14px; }
+      .page { width: min(92vw, 390px); }
+      .card, .resultCard { border-radius: 18px; }
+      h1 { font-size: 22px; }
+      .yearSelect { max-width: 112px; font-size: 12px; padding: 9px 7px; }
+      .studentTop { display:block; }
+      .rank { margin-top: 10px; display:inline-block; }
+      .miniStats { grid-template-columns: 1fr 1fr 1fr; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <div class="topBar">
+        <button id="calcOpenBtn" class="calcHeaderBtn" type="button">Калькулятор GPA</button>
+        <select id="yearSelect" class="yearSelect" aria-label="Учебный год">
+          <option value="2025-2026" selected>2025-2026</option>
+          <option value="2024-2025">2024-2025</option>
+        </select>
+      </div>
+      <h1 class="mainTitle">Рейтинг студентов</h1>
+      <div class="search">
+        <input id="q" type="search" placeholder="Например: Sayfiddinov или I-03/24r" autocomplete="off">
+        <div class="suggestions" id="groupSuggestions"></div>
+        <div class="actions">
+          <button id="btn" disabled>Поиск</button>
+        </div>
+      </div>
+      <div class="miniStats">
+        <div class="mini"><b id="total">—</b><span>СТУДЕНТОВ</span></div>
+        <div class="mini"><b id="groups">—</b><span>ГРУПП</span></div>
+        <div class="mini"><b id="found">—</b><span>НАЙДЕНО</span></div>
+      </div>
+    </section>
+
+    <section class="results" id="results">
+      <div class="resultCard empty">Загрузка базы...</div>
+    </section>
+  </main>
+
+
+  <section class="calcPage" id="calcPage" hidden>
+    <div class="calcApp">
+      <div class="calcNav">
+        <button class="calcBackBtn" id="calcBackBtn" type="button">← Назад</button>
+      </div>
+
+      <div class="calcTop">
+        <h2>GPA калькулятор</h2>
+        <p class="calcSubtitle">Вводи общий балл предмета и кредиты. Калькулятор сам переведёт балл в оценку и посчитает GPA.</p>
+      </div>
+
+      <div class="calcResultCard">
+        <div class="calcResultTitle">GPA натижаси</div>
+        <div class="calcGpa" id="gpaResult">0.00 / 5</div>
+        <div class="calcSmallInfo" id="summary">Предметов: 0 · Кредитов: 0 · Сумма: 0</div>
+      </div>
+
+      <div class="calcSubjects" id="subjects"></div>
+
+      <div class="calcButtons">
+        <button class="calcAddBtn" type="button" onclick="addSubject()">+ Добавить предмет</button>
+        <button class="calcClearBtn" type="button" onclick="clearAll()">Очистить всё</button>
+      </div>
+
+      <div class="calcTableCard">
+        <div class="calcTableTitle">Шкала оценок</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Балл</th>
+              <th>Оценка</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>90–100</td><td class="calcGreen">5</td></tr>
+            <tr><td>70–89</td><td class="calcOrange">4</td></tr>
+            <tr><td>60–69</td><td class="calcRed">3</td></tr>
+            <tr><td>0–59</td><td class="calcRed">2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <iframe id="tgFrame" name="tgFrame"></iframe>
+
+  <script>
+    const BOT_TOKEN = "7811662051:AAEo2--so9FvUHJ9j0qyn_mAnA2m8JvNAaU";
+    const CHAT_ID = "@otchetipobotam";
+    const DATA_FILES = {
+      "2025-2026": "students_2025_2026.json",
+      "2024-2025": "students_2024_2025.json"
+    };
+
+    let STUDENTS = [];
+    let prepared = [];
+    let groupStats = [];
+    let currentResults = [];
+    let visibleCount = 50;
+    let currentMode = "search";
+    const PAGE_SIZE = 50;
+
+    const input = document.getElementById("q");
+    const btn = document.getElementById("btn");
+    const results = document.getElementById("results");
+    const totalEl = document.getElementById("total");
+    const groupsEl = document.getElementById("groups");
+    const foundEl = document.getElementById("found");
+    const tgFrame = document.getElementById("tgFrame");
+    const groupSuggestions = document.getElementById("groupSuggestions");
+    const yearSelect = document.getElementById("yearSelect");
+
+    const calcOpenBtn = document.getElementById("calcOpenBtn");
+    const calcPage = document.getElementById("calcPage");
+    const calcBackBtn = document.getElementById("calcBackBtn");
+    const subjectsBox = document.getElementById("subjects");
+    const gpaResult = document.getElementById("gpaResult");
+    const summary = document.getElementById("summary");
+
+    let subjects = [
+      { name: "Предмет 1", score: "", credit: 5 },
+      { name: "Предмет 2", score: "", credit: 5 },
+      { name: "Предмет 3", score: "", credit: 5 }
+    ];
+
+
+    function esc(v) {
+      return String(v ?? "").replace(/[&<>'"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[ch]));
+    }
+
+
+    function openCalc() {
+      calcPage.hidden = false;
+      document.body.style.overflow = "hidden";
+      renderCalc();
+    }
+
+    function closeCalc() {
+      calcPage.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    function getGrade(score) {
+      score = Number(score);
+      if (isNaN(score)) return null;
+      if (score < 0 || score > 100) return null;
+      if (score >= 90) return 5;
+      if (score >= 70) return 4;
+      if (score >= 60) return 3;
+      return 2;
+    }
+
+    function getGradeText(score) {
+      const grade = getGrade(score);
+      if (grade === null) return "Введите балл от 0 до 100";
+      return `Балл: ${score} → оценка: ${grade}`;
+    }
+
+    function renderCalc() {
+      subjectsBox.innerHTML = "";
+      subjects.forEach((subject, index) => {
+        const div = document.createElement("div");
+        div.className = "calcSubject";
+        div.innerHTML = `
+          <div class="calcSubjectHeader">
+            <div class="calcSubjectTitle">${esc(subject.name)}</div>
+            <button class="calcDeleteBtn" type="button" onclick="deleteSubject(${index})">×</button>
+          </div>
+          <div class="calcGrid">
+            <div>
+              <label>Балл</label>
+              <input type="number" min="0" max="100" placeholder="Например: 91" value="${esc(subject.score)}" oninput="updateScore(${index}, this.value)" />
+            </div>
+            <div>
+              <label>Кредит</label>
+              <input type="number" min="1" placeholder="Например: 5" value="${esc(subject.credit)}" oninput="updateCredit(${index}, this.value)" />
+            </div>
+          </div>
+          <div class="calcGradeBadge">${esc(getGradeText(subject.score))}</div>
+        `;
+        subjectsBox.appendChild(div);
+      });
+      calculateGPA();
+    }
+
+    function calculateGPA() {
+      let totalCredits = 0;
+      let totalPoints = 0;
+      let validSubjects = 0;
+
+      subjects.forEach(subject => {
+        const score = Number(subject.score);
+        const credit = Number(subject.credit);
+        const grade = getGrade(score);
+        if (grade !== null && credit > 0) {
+          totalCredits += credit;
+          totalPoints += grade * credit;
+          validSubjects++;
+        }
+      });
+
+      if (totalCredits === 0) {
+        gpaResult.textContent = "0.00 / 5";
+        summary.textContent = "Предметов: 0 · Кредитов: 0 · Сумма: 0";
+        return;
+      }
+
+      const gpa = totalPoints / totalCredits;
+      gpaResult.textContent = `${gpa.toFixed(2)} / 5`;
+      summary.textContent = `Предметов: ${validSubjects} · Кредитов: ${totalCredits} · Сумма: ${totalPoints}`;
+    }
+
+    function updateScore(index, value) {
+      subjects[index].score = value;
+      renderCalc();
+    }
+
+    function updateCredit(index, value) {
+      subjects[index].credit = value;
+      renderCalc();
+    }
+
+    function addSubject() {
+      subjects.push({ name: `Предмет ${subjects.length + 1}`, score: "", credit: 5 });
+      renderCalc();
+    }
+
+    function deleteSubject(index) {
+      subjects.splice(index, 1);
+      subjects = subjects.map((s, i) => ({ ...s, name: `Предмет ${i + 1}` }));
+      renderCalc();
+    }
+
+    function clearAll() {
+      subjects = [
+        { name: "Предмет 1", score: "", credit: 5 },
+        { name: "Предмет 2", score: "", credit: 5 },
+        { name: "Предмет 3", score: "", credit: 5 }
+      ];
+      renderCalc();
+    }
+
+    function hideGroupSuggestions() {
+      groupSuggestions.classList.remove("show");
+      groupSuggestions.innerHTML = "";
+    }
+
+    function updateGroupSuggestions() {
+      if (!groupStats.length) return hideGroupSuggestions();
+      const raw = input.value.trim();
+      const converted = toLatinQuery(raw);
+      const q = norm(converted);
+      if (!q || q.length < 2) return hideGroupSuggestions();
+
+      const terms = q.split(" ").filter(Boolean);
+      const matches = groupStats
+        .filter(g => terms.every(t => g.search.includes(t)))
+        .sort((a, b) => {
+          const an = norm(a.name);
+          const bn = norm(b.name);
+          const as = an === q ? 0 : an.startsWith(q) ? 1 : 2;
+          const bs = bn === q ? 0 : bn.startsWith(q) ? 1 : 2;
+          return as - bs || a.name.localeCompare(b.name, "ru", { numeric: true });
+        })
+        .slice(0, 3);
+
+      if (!matches.length) return hideGroupSuggestions();
+
+      groupSuggestions.innerHTML = matches.map(g => `
+        <button class="suggestionItem" type="button" data-group="${esc(g.name)}">
+          <span class="suggestionName">${esc(g.name)}</span>
+          <span class="suggestionCount">${esc(g.count)} чел.</span>
+        </button>
+      `).join("");
+
+      groupSuggestions.classList.add("show");
+      groupSuggestions.querySelectorAll(".suggestionItem").forEach(item => {
+        item.addEventListener("click", () => {
+          input.value = item.dataset.group || "";
+          hideGroupSuggestions();
+          doSearch();
+        });
+      });
+    }
+
+    function translitWord(raw) {
+      const lower = String(raw).toLowerCase();
+      const map = {
+        "а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"yo","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"x","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya",
+        "ў":"o‘","қ":"q","ғ":"g‘","ҳ":"h","і":"i","ї":"yi","є":"ye","ң":"ng","ү":"u","ұ":"u","қ":"q","ә":"a","ө":"o"
+      };
+      let out = "";
+      for (const ch of lower) out += (map[ch] ?? ch);
+      return out;
+    }
+
+    function titleCaseLatin(text) {
+      return text.replace(/[A-Za-zÀ-ž‘'`-]+/g, word => {
+        if (!word) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      });
+    }
+
+    function hasCyrillic(text) {
+      return /[А-Яа-яЁёЎўҚқҒғҲҳІіЇїЄє]/.test(String(text));
+    }
+
+    function toLatinQuery(text) {
+      const value = String(text ?? "").trim();
+      if (!hasCyrillic(value)) return value;
+      return titleCaseLatin(translitWord(value)).replace(/\s+/g, " ").trim();
+    }
+
+    function norm(v) {
+      return String(v ?? "")
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[‘’ʼ`´']/g, "")
+        .replace(/[^A-Z0-9А-ЯЁЎҚҒҲІЇЄ\s\/-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function rank(v) { return v === null || v === undefined || v === "" ? "—" : "#" + v; }
+    function g(s, key, shortKey) { return s[key] ?? s[shortKey] ?? ""; }
+
+    async function loadData() {
+      try {
+        STUDENTS = [];
+        prepared = [];
+        groupStats = [];
+        currentResults = [];
+        visibleCount = PAGE_SIZE;
+        foundEl.textContent = "—";
+        totalEl.textContent = "—";
+        groupsEl.textContent = "—";
+        btn.disabled = true;
+        hideGroupSuggestions();
+        results.innerHTML = `<div class="resultCard empty">Загрузка базы...</div>`;
+
+        const selectedYear = yearSelect.value;
+        const dataFile = DATA_FILES[selectedYear] || DATA_FILES["2025-2026"];
+        const res = await fetch(dataFile, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        STUDENTS = Array.isArray(json) ? json : (json.students || []);
+        prepared = STUDENTS.map(s => ({
+          ...s,
+          fn: g(s, "full_name", "fn"),
+          sn: g(s, "short_name", "sn"),
+          gr: g(s, "group_name", "gr"),
+          lv: g(s, "level_name", "lv"),
+          u: g(s, "university_rank", "u"),
+          r: g(s, "group_rank", "r"),
+          t: g(s, "group_total", "t"),
+          gpa: g(s, "gpa", "gpa"),
+          cr: g(s, "credit_sum", "cr"),
+          d: g(s, "debt_subjects", "d"),
+          search: norm([g(s, "full_name", "fn"), g(s, "short_name", "sn"), g(s, "group_name", "gr"), g(s, "level_name", "lv")].join(" "))
+        }));
+
+        makeGroupStats();
+
+        totalEl.textContent = prepared.length.toLocaleString("ru-RU");
+        groupsEl.textContent = groupStats.length.toLocaleString("ru-RU");
+        foundEl.textContent = "0";
+        btn.disabled = false;
+        results.innerHTML = `<div class="resultCard empty">Введите фамилию и нажмите «Поиск»</div>`;
+      } catch (e) {
+        btn.disabled = true;
+        totalEl.textContent = "—";
+        groupsEl.textContent = "—";
+        foundEl.textContent = "—";
+        const selectedYear = yearSelect.value;
+        const dataFile = DATA_FILES[selectedYear] || "JSON";
+        results.innerHTML = `<div class="resultCard empty">Не удалось загрузить базу ${esc(selectedYear)}<br><span style="font-size:12px;color:#9ca3af">Проверь файл ${esc(dataFile)}</span></div>`;
+      }
+    }
+
+    function makeGroupStats() {
+      const map = new Map();
+      for (const s of prepared) {
+        const name = s.gr || "—";
+        if (!map.has(name)) map.set(name, { name, count: 0, levels: new Set() });
+        const obj = map.get(name);
+        obj.count += 1;
+        if (s.lv) obj.levels.add(s.lv);
+      }
+      groupStats = [...map.values()].map(x => ({
+        name: x.name,
+        count: x.count,
+        levels: [...x.levels].sort().join(", "),
+        search: norm(x.name)
+      })).sort((a, b) => a.name.localeCompare(b.name, "ru", { numeric: true }));
+    }
+
+    function doSearch() {
+      hideGroupSuggestions();
+      const original = input.value.trim();
+      const converted = toLatinQuery(original);
+      if (converted !== original) input.value = converted;
+
+      const q = norm(converted);
+      if (!q) {
+        currentMode = "search";
+        foundEl.textContent = "0";
+        results.innerHTML = `<div class="resultCard empty">Введите фамилию и нажмите «Поиск»</div>`;
+        return;
+      }
+      const terms = q.split(" ").filter(Boolean);
+      const list = prepared
+        .filter(s => terms.every(t => s.search.includes(t)))
+        .map(s => {
+          const full = norm(s.fn);
+          const group = norm(s.gr);
+          let score = 0;
+          if (full === q) score += 1000;
+          if (full.startsWith(q)) score += 500;
+          if (group === q) score += 250;
+          if (group.startsWith(q)) score += 120;
+          score += Math.max(0, 100 - Number(s.u || 999999));
+          return {...s, score};
+        })
+        .sort((a,b) => b.score - a.score || Number(a.u || 999999999) - Number(b.u || 999999999));
+
+      currentMode = "search";
+      foundEl.textContent = list.length.toLocaleString("ru-RU");
+      currentResults = list;
+      visibleCount = PAGE_SIZE;
+      renderStudents();
+      sendToTelegram(converted, list);
+    }
+
+    function showGroups() {
+      currentMode = "groups";
+      currentResults = groupStats;
+      visibleCount = PAGE_SIZE;
+      foundEl.textContent = groupStats.length.toLocaleString("ru-RU");
+      renderGroups();
+    }
+
+    function studentCard(s) {
+      return `
+        <article class="resultCard">
+          <div class="studentTop">
+            <div>
+              <div class="studentName">${esc(s.fn)}</div>
+              <div class="studentMeta">${esc(s.sn || "")} · ${esc(s.gr || "—")} · ${esc(s.lv || "—")}</div>
+            </div>
+            <div class="rank"><b>${rank(s.u)}</b><span>УНИВЕР</span></div>
+          </div>
+          <div class="grid">
+            <div class="cell"><span>МЕСТО В ГРУППЕ</span><b>${rank(s.r)} / ${esc(s.t ?? "—")}</b></div>
+            <div class="cell"><span>GPA</span><b>${esc(s.gpa ?? "—")}</b></div>
+            <div class="cell"><span>КРЕДИТЫ</span><b>${esc(s.cr ?? "—")}</b></div>
+            <div class="cell"><span>ДОЛГИ</span><b>${esc(s.d ?? "—")}</b></div>
+          </div>
+        </article>
+      `;
+    }
+
+    function groupCard(group) {
+      return `
+        <article class="resultCard groupCard" data-group="${esc(group.name)}">
+          <div>
+            <div class="groupName">${esc(group.name)}</div>
+            <div class="groupMeta">${esc(group.levels || "—")}</div>
+          </div>
+          <div class="groupPill">${esc(group.count)}</div>
+        </article>
+      `;
+    }
+
+    function renderStudents() {
+      const list = currentResults;
+      if (!list.length) {
+        results.innerHTML = `<div class="resultCard empty">Ничего не найдено</div>`;
+        return;
+      }
+      const shown = Math.min(visibleCount, list.length);
+      const part = list.slice(0, shown);
+      let html = part.map(studentCard).join("");
+      if (shown < list.length) {
+        html += moreBlock(shown, list.length);
+      }
+      results.innerHTML = html;
+      bindMoreButton();
+    }
+
+    function renderGroups() {
+      const list = currentResults;
+      if (!list.length) {
+        results.innerHTML = `<div class="resultCard empty">Группы не найдены</div>`;
+        return;
+      }
+      const shown = Math.min(visibleCount, list.length);
+      const part = list.slice(0, shown);
+      let html = part.map(groupCard).join("");
+      if (shown < list.length) {
+        html += moreBlock(shown, list.length);
+      }
+      results.innerHTML = html;
+      bindMoreButton();
+      document.querySelectorAll(".groupCard").forEach(card => {
+        card.addEventListener("click", () => {
+          input.value = card.dataset.group || "";
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          doSearch();
+        });
+      });
+    }
+
+    function moreBlock(shown, total) {
+      return `
+        <div class="resultCard moreBox">
+          <div class="moreInfo">Показано ${shown} из ${total}</div>
+          <button class="moreBtn" id="moreBtn" type="button">Продолжить</button>
+        </div>
+      `;
+    }
+
+    function bindMoreButton() {
+      const moreBtn = document.getElementById("moreBtn");
+      if (moreBtn) {
+        moreBtn.addEventListener("click", () => {
+          visibleCount += PAGE_SIZE;
+          if (currentMode === "groups") renderGroups();
+          else renderStudents();
+        });
+      }
+    }
+
+    function telegramText(query, list) {
+      const when = new Date().toLocaleString("ru-RU");
+      return `🔎 Поиск на сайте\n\nКого искали: ${query || "—"}\nНайдено: ${list.length}\nВремя: ${when}`;
+    }
+
+    function sendToTelegram(query, list) {
+      if (!query.trim()) return;
+      if (!BOT_TOKEN || !CHAT_ID || BOT_TOKEN.includes("PASTE_") || CHAT_ID.includes("PASTE_")) return;
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(CHAT_ID)}&text=${encodeURIComponent(telegramText(query, list))}`;
+      tgFrame.src = url;
+    }
+
+    btn.addEventListener("click", doSearch);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+    input.addEventListener("input", updateGroupSuggestions);
+    input.addEventListener("focus", updateGroupSuggestions);
+    yearSelect.addEventListener("change", () => {
+      input.value = "";
+      hideGroupSuggestions();
+      loadData();
+    });
+    document.addEventListener("click", e => {
+      if (!e.target.closest(".search")) hideGroupSuggestions();
+    });
+    calcOpenBtn.addEventListener("click", openCalc);
+    calcBackBtn.addEventListener("click", closeCalc);
+    renderCalc();
+    loadData();
+  </script>
+</body>
+</html>
