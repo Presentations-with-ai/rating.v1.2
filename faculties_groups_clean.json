@@ -1,0 +1,2095 @@
+{
+  "source": "https://tsue.edupage.org/timetable/",
+  "total_faculties": 6,
+  "total_groups": 662,
+  "faculties": [
+    {
+      "name": "MENEJMENT FAKULTETI",
+      "courses": [
+        {
+          "name": "1 KURS",
+          "groups": [
+            {
+              "name": "MO-80/25"
+            },
+            {
+              "name": "MO-81/25"
+            },
+            {
+              "name": "MO-82/25"
+            },
+            {
+              "name": "MO-83/25"
+            },
+            {
+              "name": "MO-84/25"
+            },
+            {
+              "name": "MO-85/25"
+            },
+            {
+              "name": "MO-86/25"
+            },
+            {
+              "name": "MO-87/25"
+            },
+            {
+              "name": "MO-88/25"
+            },
+            {
+              "name": "MO-89/25"
+            },
+            {
+              "name": "MO-80k/25"
+            },
+            {
+              "name": "MO-81k/25"
+            },
+            {
+              "name": "MO-82k/25"
+            },
+            {
+              "name": "MO-83k/25"
+            },
+            {
+              "name": "MO-84k/25"
+            },
+            {
+              "name": "MO-85k/25"
+            },
+            {
+              "name": "MO-86k/25"
+            },
+            {
+              "name": "MO-87k/25"
+            },
+            {
+              "name": "MO-88k/25"
+            },
+            {
+              "name": "MO-89k/25"
+            },
+            {
+              "name": "МО-30/25"
+            },
+            {
+              "name": "МО-31/25"
+            },
+            {
+              "name": "МО-32/25"
+            },
+            {
+              "name": "МО-33/25"
+            },
+            {
+              "name": "МО-34/25"
+            },
+            {
+              "name": "МО-35/25"
+            },
+            {
+              "name": "MO-38i/25"
+            },
+            {
+              "name": "MO-39i/25"
+            },
+            {
+              "name": "LG-80/25"
+            },
+            {
+              "name": "LG-81/25"
+            },
+            {
+              "name": "LG-82/25"
+            },
+            {
+              "name": "LG-83/25"
+            },
+            {
+              "name": "LG-84/25"
+            },
+            {
+              "name": "LG-85/25"
+            },
+            {
+              "name": "BBA-80/25"
+            },
+            {
+              "name": "BBA-81/25"
+            },
+            {
+              "name": "BBA-82/25"
+            },
+            {
+              "name": "BBA-83/25"
+            },
+            {
+              "name": "BBA-84/25"
+            },
+            {
+              "name": "BBA-85/25"
+            },
+            {
+              "name": "BBA-86/25"
+            },
+            {
+              "name": "BBA-87/25"
+            },
+            {
+              "name": "BBA-88/25"
+            },
+            {
+              "name": "BBA-30/25"
+            },
+            {
+              "name": "BBA-31/25"
+            },
+            {
+              "name": "BBA-38i/25"
+            }
+          ],
+          "groups_count": 46
+        },
+        {
+          "name": "2 KURS",
+          "groups": [
+            {
+              "name": "MNP-51/24"
+            },
+            {
+              "name": "MNP-52/24"
+            },
+            {
+              "name": "MNP-53/24"
+            },
+            {
+              "name": "MNP-54/24"
+            },
+            {
+              "name": "MNP-55/24"
+            },
+            {
+              "name": "MNP-56/24"
+            },
+            {
+              "name": "MNP-57/24"
+            },
+            {
+              "name": "MO-59/24"
+            },
+            {
+              "name": "MO-50/24"
+            },
+            {
+              "name": "MO-51/24"
+            },
+            {
+              "name": "MO-52/24"
+            },
+            {
+              "name": "MO-53/24"
+            },
+            {
+              "name": "MO-54/24"
+            },
+            {
+              "name": "MO-55/24"
+            },
+            {
+              "name": "MO-56/24"
+            },
+            {
+              "name": "MO-57/24"
+            },
+            {
+              "name": "MO-58/24"
+            },
+            {
+              "name": "LG-51/24"
+            },
+            {
+              "name": "LG-52/24"
+            },
+            {
+              "name": "BBA-51/24"
+            },
+            {
+              "name": "BBA-52/24"
+            },
+            {
+              "name": "BBA-53/24"
+            },
+            {
+              "name": "BBA-54/24"
+            },
+            {
+              "name": "BBA-55/24"
+            }
+          ],
+          "groups_count": 24
+        },
+        {
+          "name": "3 KURS",
+          "groups": [
+            {
+              "name": "MNP-75/23"
+            },
+            {
+              "name": "MNP-76/23"
+            },
+            {
+              "name": "MO-75/23"
+            },
+            {
+              "name": "MO-76/23"
+            },
+            {
+              "name": "MO-77/23"
+            },
+            {
+              "name": "LG-75/23"
+            },
+            {
+              "name": "BBA-75/23"
+            },
+            {
+              "name": "KB-75/23"
+            },
+            {
+              "name": "KB-76/23"
+            },
+            {
+              "name": "IH-75/23"
+            },
+            {
+              "name": "IH-76/23"
+            }
+          ],
+          "groups_count": 11
+        }
+      ],
+      "groups_count": 81
+    },
+    {
+      "name": "IQTISODIYOT FAKULTETI",
+      "courses": [
+        {
+          "name": "Не указано",
+          "groups": [
+            {
+              "name": "I-80/25"
+            },
+            {
+              "name": "I-81/25"
+            },
+            {
+              "name": "I-82/25"
+            },
+            {
+              "name": "I-83/25"
+            },
+            {
+              "name": "I-84/25"
+            },
+            {
+              "name": "I-85/25"
+            },
+            {
+              "name": "I-86/25"
+            },
+            {
+              "name": "I-87/25"
+            },
+            {
+              "name": "I-88/25"
+            },
+            {
+              "name": "I-89/25"
+            },
+            {
+              "name": "I-80k/25"
+            },
+            {
+              "name": "I-81k/25"
+            },
+            {
+              "name": "I-82k/25"
+            },
+            {
+              "name": "I-83k/25"
+            },
+            {
+              "name": "I-84k/25"
+            },
+            {
+              "name": "I-85k/25"
+            },
+            {
+              "name": "I-30/25"
+            },
+            {
+              "name": "I-31/25"
+            },
+            {
+              "name": "I-32/25"
+            },
+            {
+              "name": "I-33/25"
+            },
+            {
+              "name": "IRB-80/25"
+            },
+            {
+              "name": "IRB-81/25"
+            },
+            {
+              "name": "IRB-82/25"
+            },
+            {
+              "name": "IRB-83/25"
+            },
+            {
+              "name": "IRB-84/25"
+            },
+            {
+              "name": "IRB-85/25"
+            },
+            {
+              "name": "I-50/24"
+            },
+            {
+              "name": "I-51/24"
+            },
+            {
+              "name": "I-52/24"
+            },
+            {
+              "name": "I-53/24"
+            },
+            {
+              "name": "I-54/24"
+            },
+            {
+              "name": "I-55/24"
+            },
+            {
+              "name": "I-56/24"
+            },
+            {
+              "name": "I-57/24"
+            },
+            {
+              "name": "I-58/24"
+            },
+            {
+              "name": "I-59/24"
+            },
+            {
+              "name": "I-50k/24"
+            },
+            {
+              "name": "I-51k/24"
+            },
+            {
+              "name": "I-52k/24"
+            },
+            {
+              "name": "I-53k/24"
+            },
+            {
+              "name": "IRB-50/24"
+            },
+            {
+              "name": "IRB-51/24"
+            },
+            {
+              "name": "IRB-52/24"
+            },
+            {
+              "name": "I-71/23"
+            },
+            {
+              "name": "I-72/23"
+            },
+            {
+              "name": "I-73/23"
+            },
+            {
+              "name": "I-74/23"
+            },
+            {
+              "name": "I-75/23"
+            },
+            {
+              "name": "I-76/23"
+            },
+            {
+              "name": "I-77/23"
+            },
+            {
+              "name": "I-78/23"
+            },
+            {
+              "name": "I-79/23"
+            },
+            {
+              "name": "I-72k/23"
+            },
+            {
+              "name": "I-71k/23"
+            },
+            {
+              "name": "I-70k/23"
+            },
+            {
+              "name": "I-73k/23"
+            },
+            {
+              "name": "I-74k/23"
+            },
+            {
+              "name": "IRB-75/23"
+            },
+            {
+              "name": "IRB-76/23"
+            },
+            {
+              "name": "MI-75/23"
+            },
+            {
+              "name": "MI-76/23"
+            },
+            {
+              "name": "BB-75/23"
+            },
+            {
+              "name": "YaI-75/23"
+            },
+            {
+              "name": "YaI-76/23"
+            },
+            {
+              "name": "ShI-75/23"
+            },
+            {
+              "name": "TI-75/23"
+            },
+            {
+              "name": "PTI-75/23"
+            }
+          ],
+          "groups_count": 67
+        }
+      ],
+      "groups_count": 67
+    },
+    {
+      "name": "RAQAMLI IQTISODIYOT FAKULTETI",
+      "courses": [
+        {
+          "name": "Не указано",
+          "groups": [
+            {
+              "name": "AT-81/25"
+            },
+            {
+              "name": "AT-82/25"
+            },
+            {
+              "name": "AT-83/25"
+            },
+            {
+              "name": "AT-84/25"
+            },
+            {
+              "name": "AT-85/25"
+            },
+            {
+              "name": "AT-86/25"
+            },
+            {
+              "name": "AT-87/25"
+            },
+            {
+              "name": "AT-88/25"
+            },
+            {
+              "name": "IB-81/25"
+            },
+            {
+              "name": "IB-82/25"
+            },
+            {
+              "name": "IB-83/25"
+            },
+            {
+              "name": "IB-84/25"
+            },
+            {
+              "name": "IB-85/25"
+            },
+            {
+              "name": "IB-86/25"
+            },
+            {
+              "name": "IB-87/25"
+            },
+            {
+              "name": "IB-88/25"
+            },
+            {
+              "name": "II-81/25"
+            },
+            {
+              "name": "II-82/25"
+            },
+            {
+              "name": "II-83/25"
+            },
+            {
+              "name": "II-84/25"
+            },
+            {
+              "name": "II-85/25"
+            },
+            {
+              "name": "II-86/25"
+            },
+            {
+              "name": "RST-81/25"
+            },
+            {
+              "name": "RST-82/25"
+            },
+            {
+              "name": "RST-83/25"
+            },
+            {
+              "name": "RST-84/25"
+            },
+            {
+              "name": "RST-85/25"
+            },
+            {
+              "name": "RST-86/25"
+            },
+            {
+              "name": "RST-87/25"
+            },
+            {
+              "name": "RST-88/25"
+            },
+            {
+              "name": "II-31/32"
+            },
+            {
+              "name": "II-32/35"
+            },
+            {
+              "name": "AT-31/35"
+            },
+            {
+              "name": "AT-32/33"
+            },
+            {
+              "name": "IB-31/35"
+            },
+            {
+              "name": "IB-32/34"
+            }
+          ],
+          "groups_count": 36
+        },
+        {
+          "name": "Raqamli iqt. fakulteti. Ma`lumotlar tuzilmasi va algoritmlar(RUS)",
+          "groups": [
+            {
+              "name": "AT-53/24"
+            },
+            {
+              "name": "AT-54/24"
+            },
+            {
+              "name": "AT-55/24"
+            },
+            {
+              "name": "AT-56/24"
+            },
+            {
+              "name": "AT-57/24"
+            },
+            {
+              "name": "II-51/24"
+            },
+            {
+              "name": "II-52/24"
+            },
+            {
+              "name": "II-53/24"
+            },
+            {
+              "name": "IB-51/24"
+            },
+            {
+              "name": "IB-52/24"
+            },
+            {
+              "name": "IB-53/24"
+            },
+            {
+              "name": "RST-51/24"
+            },
+            {
+              "name": "RST-52/24"
+            },
+            {
+              "name": "RST-53/24"
+            },
+            {
+              "name": "RST-54/24"
+            },
+            {
+              "name": "RST-50/23"
+            }
+          ],
+          "groups_count": 16
+        },
+        {
+          "name": "Raqamli iqt. fakulteti. Ekonometrika. Qayta o`qish (O`zbek)",
+          "groups": [
+            {
+              "name": "ATT-75/23"
+            },
+            {
+              "name": "ATT-76/23"
+            },
+            {
+              "name": "ATT-77/23"
+            },
+            {
+              "name": "AT-75/23"
+            },
+            {
+              "name": "AT-76/23"
+            },
+            {
+              "name": "IB-75/23"
+            },
+            {
+              "name": "II-75/23"
+            },
+            {
+              "name": "EKR-75/23"
+            },
+            {
+              "name": "BET-75/23"
+            },
+            {
+              "name": "BET-76/23"
+            },
+            {
+              "name": "DS-75/23"
+            },
+            {
+              "name": "RI-75/23"
+            },
+            {
+              "name": "RI-76/23"
+            },
+            {
+              "name": "RST-75/23"
+            },
+            {
+              "name": "RST-76/23"
+            },
+            {
+              "name": "RST-77/23"
+            }
+          ],
+          "groups_count": 16
+        }
+      ],
+      "groups_count": 68
+    },
+    {
+      "name": "TURIZM FAKULTETI",
+      "courses": [
+        {
+          "name": "Не указано",
+          "groups": [
+            {
+              "name": "MR-79i/25"
+            },
+            {
+              "name": "MR-80i/25"
+            },
+            {
+              "name": "MR-81i/25"
+            },
+            {
+              "name": "MR-82/25"
+            },
+            {
+              "name": "MR-83/25"
+            },
+            {
+              "name": "MR-84/25"
+            },
+            {
+              "name": "MR-85/25"
+            },
+            {
+              "name": "MR-86/25"
+            },
+            {
+              "name": "MR-87/25"
+            },
+            {
+              "name": "MR-88/25"
+            },
+            {
+              "name": "MR-30/25"
+            },
+            {
+              "name": "MR-31/25"
+            },
+            {
+              "name": "MR-32/25"
+            },
+            {
+              "name": "TU-81i/25"
+            },
+            {
+              "name": "TU-82/25"
+            },
+            {
+              "name": "TU-83/25"
+            },
+            {
+              "name": "TU-84/25"
+            },
+            {
+              "name": "TU-85/25"
+            },
+            {
+              "name": "TU-86/25"
+            },
+            {
+              "name": "TU-87/25"
+            },
+            {
+              "name": "TU-88/25"
+            },
+            {
+              "name": "TU-89/25"
+            },
+            {
+              "name": "TU-80k/25"
+            },
+            {
+              "name": "TU-81k/25"
+            },
+            {
+              "name": "TU-82k/25"
+            },
+            {
+              "name": "TU-30/25"
+            },
+            {
+              "name": "TU-31/25"
+            },
+            {
+              "name": "TU-32/25"
+            },
+            {
+              "name": "TU-33/25"
+            },
+            {
+              "name": "KD-80i/25"
+            },
+            {
+              "name": "KD-81/25"
+            },
+            {
+              "name": "KD-82/25"
+            },
+            {
+              "name": "KD-83/25"
+            },
+            {
+              "name": "KD-84/25"
+            },
+            {
+              "name": "KD-85/25"
+            },
+            {
+              "name": "KD-86/25"
+            },
+            {
+              "name": "KD-87/25"
+            },
+            {
+              "name": "KD-88/25"
+            },
+            {
+              "name": "KD-89/25"
+            },
+            {
+              "name": "TU-51/24"
+            },
+            {
+              "name": "TU-52/24"
+            },
+            {
+              "name": "TU-53/24"
+            },
+            {
+              "name": "TU-54/24"
+            },
+            {
+              "name": "TU-55/24"
+            },
+            {
+              "name": "TU-56/24"
+            },
+            {
+              "name": "TU-57/24"
+            },
+            {
+              "name": "MR-51/24"
+            },
+            {
+              "name": "MR-52/24"
+            },
+            {
+              "name": "MR-53/24"
+            },
+            {
+              "name": "MR-54/24"
+            },
+            {
+              "name": "MR-55/24"
+            },
+            {
+              "name": "KD-51/24"
+            },
+            {
+              "name": "KD-52/24"
+            },
+            {
+              "name": "KD-53/24"
+            },
+            {
+              "name": "TL-75/23"
+            },
+            {
+              "name": "TU-75/23"
+            },
+            {
+              "name": "TU-76/23"
+            },
+            {
+              "name": "TM-75/23"
+            },
+            {
+              "name": "MR-75/23"
+            }
+          ],
+          "groups_count": 59
+        },
+        {
+          "name": "4 KURS",
+          "groups": [
+            {
+              "name": "TU-61/22"
+            },
+            {
+              "name": "TU-62/22"
+            },
+            {
+              "name": "TU-63/22"
+            },
+            {
+              "name": "TL-61/22"
+            },
+            {
+              "name": "TM-61/22"
+            },
+            {
+              "name": "MR-61/22"
+            },
+            {
+              "name": "MRD-61/22"
+            },
+            {
+              "name": "KD-61/22"
+            },
+            {
+              "name": "ST-80/25"
+            },
+            {
+              "name": "ST-81/25"
+            },
+            {
+              "name": "ST-82/25"
+            },
+            {
+              "name": "ST-83/25"
+            },
+            {
+              "name": "ST-84/25"
+            },
+            {
+              "name": "ST-85/25"
+            },
+            {
+              "name": "ST-86/25"
+            },
+            {
+              "name": "ST-87/25"
+            },
+            {
+              "name": "ST-88/25"
+            },
+            {
+              "name": "ST-89/25"
+            },
+            {
+              "name": "ST-80i/25"
+            },
+            {
+              "name": "ST-30/25"
+            },
+            {
+              "name": "ST-31/25"
+            },
+            {
+              "name": "ST-32/25"
+            },
+            {
+              "name": "ST-50/24"
+            },
+            {
+              "name": "ST-51/24"
+            },
+            {
+              "name": "ST-52/24"
+            },
+            {
+              "name": "ST-53/24"
+            },
+            {
+              "name": "ST-54/24"
+            },
+            {
+              "name": "ST-55/24"
+            },
+            {
+              "name": "ST-56/24"
+            },
+            {
+              "name": "ST-57/24"
+            },
+            {
+              "name": "ST-70/23"
+            },
+            {
+              "name": "ST-71/23"
+            },
+            {
+              "name": "ST-72/23"
+            },
+            {
+              "name": "ST-73/23"
+            },
+            {
+              "name": "ST-74/23"
+            },
+            {
+              "name": "ST-75/23"
+            },
+            {
+              "name": "ST-76/23"
+            },
+            {
+              "name": "ST-77/23"
+            },
+            {
+              "name": "ST-78/23"
+            },
+            {
+              "name": "SS-70/23"
+            },
+            {
+              "name": "SS-71/23"
+            },
+            {
+              "name": "SS-72/23"
+            },
+            {
+              "name": "SS-73/23"
+            },
+            {
+              "name": "SS-74/23"
+            },
+            {
+              "name": "BHA-80/25"
+            },
+            {
+              "name": "BHA-81/25"
+            },
+            {
+              "name": "BHA-82/25"
+            },
+            {
+              "name": "BHA-83/25"
+            },
+            {
+              "name": "BHA-86/25"
+            },
+            {
+              "name": "BHA-87/25"
+            },
+            {
+              "name": "BHA-88/25"
+            },
+            {
+              "name": "BHA-89/25"
+            },
+            {
+              "name": "BHA-80k/25"
+            },
+            {
+              "name": "BHA-81k/25"
+            },
+            {
+              "name": "BHA-82k/25"
+            },
+            {
+              "name": "BHA-83k/25"
+            },
+            {
+              "name": "BHA-30/25"
+            },
+            {
+              "name": "BHA-31/25"
+            },
+            {
+              "name": "BHA-32/25"
+            },
+            {
+              "name": "BHA-33/25"
+            },
+            {
+              "name": "BHA-50/24"
+            },
+            {
+              "name": "BHA-51/24"
+            },
+            {
+              "name": "BHA-52/24"
+            },
+            {
+              "name": "BHA-53/24"
+            },
+            {
+              "name": "BHA-54/24"
+            },
+            {
+              "name": "BHA-55/24"
+            },
+            {
+              "name": "BHA-56/24"
+            },
+            {
+              "name": "BHA-57/24"
+            },
+            {
+              "name": "BHA-58/24"
+            },
+            {
+              "name": "BHA-59/24"
+            },
+            {
+              "name": "BHA-50k/24"
+            },
+            {
+              "name": "BHA-51k/24"
+            },
+            {
+              "name": "BHA-70/23"
+            },
+            {
+              "name": "BHA-71/23"
+            },
+            {
+              "name": "BHA-72/23"
+            },
+            {
+              "name": "BHA-73/23"
+            },
+            {
+              "name": "BHA-74/23"
+            },
+            {
+              "name": "BHA-76/23"
+            },
+            {
+              "name": "BHA-77/23"
+            },
+            {
+              "name": "BHA-78/23"
+            },
+            {
+              "name": "BHA-79/23"
+            },
+            {
+              "name": "BHA-72k/23"
+            },
+            {
+              "name": "BHA-73k/23"
+            },
+            {
+              "name": "BHA-74k/23"
+            },
+            {
+              "name": "BT-70/23"
+            },
+            {
+              "name": "BT-71/23"
+            },
+            {
+              "name": "BT-72/23"
+            }
+          ],
+          "groups_count": 87
+        }
+      ],
+      "groups_count": 146
+    },
+    {
+      "name": "MOLIYA FAKULTETI",
+      "courses": [
+        {
+          "name": "Не указано",
+          "groups": [
+            {
+              "name": "MMT-80/25"
+            },
+            {
+              "name": "MMT-81/25"
+            },
+            {
+              "name": "MMT-82/25"
+            },
+            {
+              "name": "MMT-83/25"
+            },
+            {
+              "name": "MMT-84/25"
+            },
+            {
+              "name": "MMT-85/25"
+            },
+            {
+              "name": "MMT-86/25"
+            },
+            {
+              "name": "MMT-87/25"
+            },
+            {
+              "name": "MMT-88/25"
+            },
+            {
+              "name": "MMT-89/25"
+            },
+            {
+              "name": "MMT-80k/25"
+            },
+            {
+              "name": "MMT-81k/25"
+            },
+            {
+              "name": "MMT-82k/25"
+            },
+            {
+              "name": "MMT-83i/25"
+            },
+            {
+              "name": "MMT-84i/25"
+            },
+            {
+              "name": "MMT-30/25"
+            },
+            {
+              "name": "MMT-31/25"
+            },
+            {
+              "name": "MMT-32/25"
+            },
+            {
+              "name": "MMT-33/25"
+            },
+            {
+              "name": "MMT-34i/25"
+            },
+            {
+              "name": "MMT-50/24"
+            },
+            {
+              "name": "MMT-51/24"
+            },
+            {
+              "name": "MMT-52/24"
+            },
+            {
+              "name": "MMT-53/24"
+            },
+            {
+              "name": "MMT-54/24"
+            },
+            {
+              "name": "MMT-55/24"
+            },
+            {
+              "name": "MMT-56/24"
+            },
+            {
+              "name": "MMT-57/24"
+            },
+            {
+              "name": "MMT-58/24"
+            },
+            {
+              "name": "MMT-59/24"
+            },
+            {
+              "name": "MMT-50k/24"
+            },
+            {
+              "name": "MMT-51i/24"
+            },
+            {
+              "name": "MMT-52i/24"
+            },
+            {
+              "name": "MMT-01/24"
+            },
+            {
+              "name": "MMT-02/24"
+            },
+            {
+              "name": "MMT-03/24"
+            },
+            {
+              "name": "MMT-04/24"
+            },
+            {
+              "name": "MMT-70/23"
+            },
+            {
+              "name": "MMT-71/23"
+            },
+            {
+              "name": "MMT-72/23"
+            },
+            {
+              "name": "MMT-73/23"
+            },
+            {
+              "name": "MMT-74/23"
+            },
+            {
+              "name": "MMT-75/23"
+            },
+            {
+              "name": "MMT-76/23"
+            },
+            {
+              "name": "MMT-77/23"
+            },
+            {
+              "name": "MMT-78/23"
+            },
+            {
+              "name": "MMT-70k/23"
+            },
+            {
+              "name": "MMT-71k/23"
+            },
+            {
+              "name": "MMT-72k/23"
+            },
+            {
+              "name": "MMT-73i/23"
+            },
+            {
+              "name": "MXVKM-70/23"
+            },
+            {
+              "name": "MXVKM-71/23"
+            },
+            {
+              "name": "MBI-70/23"
+            },
+            {
+              "name": "MBI-71/23"
+            },
+            {
+              "name": "MMT-20/23"
+            },
+            {
+              "name": "MMT-21/23"
+            },
+            {
+              "name": "MMT-22/23"
+            },
+            {
+              "name": "MXVKM-20/23"
+            },
+            {
+              "name": "MMT-79h/23"
+            }
+          ],
+          "groups_count": 59
+        }
+      ],
+      "groups_count": 59
+    },
+    {
+      "name": "BANK ISHI FAKULTETI",
+      "courses": [
+        {
+          "name": "Не указано",
+          "groups": [
+            {
+              "name": "BIA-80/25"
+            },
+            {
+              "name": "BIA-81/25"
+            },
+            {
+              "name": "BIA-82/25"
+            },
+            {
+              "name": "BIA-83/25"
+            },
+            {
+              "name": "BIA-84/25"
+            },
+            {
+              "name": "BIA-85/25"
+            },
+            {
+              "name": "BIA-86/25"
+            },
+            {
+              "name": "BIA-87/25"
+            },
+            {
+              "name": "BIA-88/25"
+            },
+            {
+              "name": "BIA-89/25"
+            },
+            {
+              "name": "BIA-80k/25"
+            },
+            {
+              "name": "BIA-30/25"
+            },
+            {
+              "name": "BIA-32/25"
+            },
+            {
+              "name": "BIA-33/25"
+            },
+            {
+              "name": "BIA-80i/25"
+            },
+            {
+              "name": "BIA-81i/25"
+            },
+            {
+              "name": "BIA-31i/25"
+            },
+            {
+              "name": "BIA-50/24"
+            },
+            {
+              "name": "BIA-51/24"
+            },
+            {
+              "name": "BIA-52/24"
+            },
+            {
+              "name": "BIA-53/24"
+            },
+            {
+              "name": "BIA-54/24"
+            },
+            {
+              "name": "BIA-55/24"
+            },
+            {
+              "name": "BIA-56/24"
+            },
+            {
+              "name": "BIA-57/24"
+            },
+            {
+              "name": "BIA-58/24"
+            },
+            {
+              "name": "BIA-59/24"
+            },
+            {
+              "name": "BIA-50i/24"
+            },
+            {
+              "name": "BIA-51i/24"
+            },
+            {
+              "name": "BIA-70/23"
+            },
+            {
+              "name": "BIA-71/23"
+            },
+            {
+              "name": "BIA-72/23"
+            },
+            {
+              "name": "BIA-73/23"
+            },
+            {
+              "name": "BIA-74/23"
+            },
+            {
+              "name": "BIA-75/23"
+            },
+            {
+              "name": "BIA-76/23"
+            },
+            {
+              "name": "BIA-77/23"
+            },
+            {
+              "name": "BIA-78/23"
+            },
+            {
+              "name": "BIA-79i/23"
+            },
+            {
+              "name": "BIA-70k/23"
+            },
+            {
+              "name": "BIA-71k/23"
+            },
+            {
+              "name": "BIA-72k/23"
+            },
+            {
+              "name": "BIA-73k/23"
+            },
+            {
+              "name": "BBI-70/23"
+            },
+            {
+              "name": "BBI-71/23"
+            },
+            {
+              "name": "ILXKM-70/23"
+            },
+            {
+              "name": "ILXKM-71/23"
+            },
+            {
+              "name": "MFG-31/25"
+            },
+            {
+              "name": "KI-80/25"
+            },
+            {
+              "name": "KI-81/25"
+            },
+            {
+              "name": "KI-82/25"
+            },
+            {
+              "name": "KBHA-80/25"
+            },
+            {
+              "name": "KMMT-80/25"
+            },
+            {
+              "name": "KBIA-80/25"
+            },
+            {
+              "name": "KM-80/25"
+            },
+            {
+              "name": "KBB-80/25"
+            },
+            {
+              "name": "KBB-81/25"
+            },
+            {
+              "name": "KIRB-80/25"
+            },
+            {
+              "name": "KIRB-81/25"
+            },
+            {
+              "name": "KI-51/24"
+            },
+            {
+              "name": "KBHA-51/24"
+            },
+            {
+              "name": "KMMT-51/24"
+            },
+            {
+              "name": "KMMT-52/24"
+            },
+            {
+              "name": "KBIA-51/24"
+            },
+            {
+              "name": "KM-51/24"
+            },
+            {
+              "name": "KBB-51/24"
+            },
+            {
+              "name": "KBB-52/24"
+            },
+            {
+              "name": "KIRB-51/24"
+            },
+            {
+              "name": "KIRB-52/24"
+            },
+            {
+              "name": "KBIA-60/23"
+            },
+            {
+              "name": "KBIA-61/23"
+            },
+            {
+              "name": "KBIA-62/23"
+            },
+            {
+              "name": "KBIA-63/23"
+            },
+            {
+              "name": "KMMT-60/23"
+            },
+            {
+              "name": "KMMT-61/23"
+            },
+            {
+              "name": "KMMT-62/23"
+            },
+            {
+              "name": "KMMT-63/23"
+            },
+            {
+              "name": "KATT-60/23"
+            },
+            {
+              "name": "KATT-61/23"
+            },
+            {
+              "name": "KATT-62/23"
+            },
+            {
+              "name": "KBHA-60/23"
+            },
+            {
+              "name": "KBHA-61/23"
+            },
+            {
+              "name": "KBHA-62/23"
+            },
+            {
+              "name": "KBHA-63/23"
+            },
+            {
+              "name": "KI-60/23"
+            },
+            {
+              "name": "KI-61/23"
+            },
+            {
+              "name": "KI-62/23"
+            },
+            {
+              "name": "KI-63/23"
+            },
+            {
+              "name": "KM-60/23"
+            },
+            {
+              "name": "KM-61/23"
+            },
+            {
+              "name": "KBIA-70/22"
+            },
+            {
+              "name": "KBIA-71/22"
+            },
+            {
+              "name": "KBIA-72/22"
+            },
+            {
+              "name": "KBIA-73/22"
+            },
+            {
+              "name": "KMMT-70/22"
+            },
+            {
+              "name": "KMMT-71/22"
+            },
+            {
+              "name": "KMMT-72/22"
+            },
+            {
+              "name": "KMMT-73/22"
+            },
+            {
+              "name": "KATT-70/22"
+            },
+            {
+              "name": "KATT-71/22"
+            },
+            {
+              "name": "KBHA-70/22"
+            },
+            {
+              "name": "KBHA-71/22"
+            },
+            {
+              "name": "KBHA-72/22"
+            },
+            {
+              "name": "KBHA-73/22"
+            },
+            {
+              "name": "KI-70/22"
+            },
+            {
+              "name": "KI-71/22"
+            },
+            {
+              "name": "KI-72/22"
+            },
+            {
+              "name": "KI-73/22"
+            },
+            {
+              "name": "MBHA-51/24"
+            },
+            {
+              "name": "MBHA-52/24"
+            },
+            {
+              "name": "MBHA-53/24"
+            },
+            {
+              "name": "MIQT-51/24"
+            },
+            {
+              "name": "MIQT-52/24"
+            },
+            {
+              "name": "MIQT-53/24"
+            },
+            {
+              "name": "MMMT-51/24"
+            },
+            {
+              "name": "MMMT-52/24"
+            },
+            {
+              "name": "MMMT-53/24"
+            },
+            {
+              "name": "MBIA-51/24"
+            },
+            {
+              "name": "MBIA-52/24"
+            },
+            {
+              "name": "MBIA-53/24"
+            },
+            {
+              "name": "MMRT-51/24"
+            },
+            {
+              "name": "MMRT-52/24"
+            },
+            {
+              "name": "MMRT-53/24"
+            },
+            {
+              "name": "MBHA-11/24"
+            },
+            {
+              "name": "MIQT-11/24"
+            },
+            {
+              "name": "MMMT-11/24"
+            },
+            {
+              "name": "MBIA-11/24"
+            },
+            {
+              "name": "MMRT-11/24"
+            },
+            {
+              "name": "MHBA-75/23"
+            },
+            {
+              "name": "MHBA-76/23"
+            },
+            {
+              "name": "MHBA-77/23"
+            },
+            {
+              "name": "MHBA-78/23"
+            },
+            {
+              "name": "MHBA-79/23"
+            },
+            {
+              "name": "MHBA-79A/23"
+            },
+            {
+              "name": "MMRT-75/23"
+            },
+            {
+              "name": "MIQT-75/23"
+            },
+            {
+              "name": "MIQT-76/23"
+            },
+            {
+              "name": "MIQT-77/23"
+            },
+            {
+              "name": "MIQT-78/23"
+            },
+            {
+              "name": "MIQT-79/23"
+            },
+            {
+              "name": "MHBA-25/23"
+            },
+            {
+              "name": "MHBA-26/23"
+            },
+            {
+              "name": "MMRT-25/23"
+            },
+            {
+              "name": "MIQT-25/23"
+            },
+            {
+              "name": "MIQT-26/23"
+            },
+            {
+              "name": "MIQT-80/25"
+            },
+            {
+              "name": "MIQT-81/25"
+            },
+            {
+              "name": "MIQT-82/25"
+            },
+            {
+              "name": "MIQT-83/25"
+            },
+            {
+              "name": "MIQT-84/25"
+            },
+            {
+              "name": "MIQT-85/25"
+            },
+            {
+              "name": "MIQT-86/25"
+            },
+            {
+              "name": "MIQT-87/25"
+            },
+            {
+              "name": "MIQT-88/25"
+            },
+            {
+              "name": "MIQT-89/25"
+            },
+            {
+              "name": "MBBA-80/25"
+            },
+            {
+              "name": "MBBA-81/25"
+            },
+            {
+              "name": "MBBA-82/25"
+            },
+            {
+              "name": "MIRB-80/25"
+            },
+            {
+              "name": "MIRB-81/25"
+            },
+            {
+              "name": "MIRB-82/25"
+            },
+            {
+              "name": "MIRB-83/25"
+            },
+            {
+              "name": "MMRT-80/25"
+            },
+            {
+              "name": "MMRT-81/25"
+            },
+            {
+              "name": "MMRT-82/25"
+            },
+            {
+              "name": "MMRT-83/25"
+            },
+            {
+              "name": "MMRT-84/25"
+            },
+            {
+              "name": "MTD-80/25"
+            },
+            {
+              "name": "MTD-81/25"
+            },
+            {
+              "name": "MTD-82/25"
+            },
+            {
+              "name": "MTD-83/25"
+            },
+            {
+              "name": "MTUR-80/25"
+            },
+            {
+              "name": "MTUR-81/25"
+            },
+            {
+              "name": "MTUR-82/25"
+            },
+            {
+              "name": "MTUR-83/25"
+            },
+            {
+              "name": "MTUR-84/25"
+            },
+            {
+              "name": "MTUR-85/25"
+            },
+            {
+              "name": "MLOG-80/25"
+            },
+            {
+              "name": "MLOG-81/25"
+            },
+            {
+              "name": "MLOG-82/25"
+            },
+            {
+              "name": "MLOG-83/25"
+            },
+            {
+              "name": "MBHA-80/25"
+            },
+            {
+              "name": "MBHA-81/25"
+            },
+            {
+              "name": "MBHA-82/25"
+            },
+            {
+              "name": "MBHA-83/25"
+            },
+            {
+              "name": "MBHA-84/25"
+            },
+            {
+              "name": "MBHA-85/25"
+            },
+            {
+              "name": "MBHA-86/25"
+            },
+            {
+              "name": "MBHA-87/25"
+            },
+            {
+              "name": "MBHA-88/25"
+            },
+            {
+              "name": "MBHA-89/25"
+            },
+            {
+              "name": "MST-80/25"
+            },
+            {
+              "name": "MST-81/25"
+            },
+            {
+              "name": "MST-82/25"
+            },
+            {
+              "name": "MST-83/25"
+            },
+            {
+              "name": "MST-84/25"
+            },
+            {
+              "name": "MST-85/25"
+            },
+            {
+              "name": "MMMT-80/25"
+            },
+            {
+              "name": "MMMT-81/25"
+            },
+            {
+              "name": "MMMT-82/25"
+            },
+            {
+              "name": "MMMT-83/25"
+            },
+            {
+              "name": "MMMT-84/25"
+            },
+            {
+              "name": "MMMT-85/25"
+            },
+            {
+              "name": "MMMT-86/25"
+            },
+            {
+              "name": "MMMT-87/25"
+            },
+            {
+              "name": "MMMT-88/25"
+            },
+            {
+              "name": "MMMT-89/25"
+            },
+            {
+              "name": "MBIA-80/25"
+            },
+            {
+              "name": "MBIA-81/25"
+            },
+            {
+              "name": "MBIA-82/25"
+            },
+            {
+              "name": "MBIA-83/25"
+            },
+            {
+              "name": "MBIA-84/25"
+            },
+            {
+              "name": "MBIA-85/25"
+            },
+            {
+              "name": "MBIA-86/25"
+            },
+            {
+              "name": "MBIA-87/25"
+            },
+            {
+              "name": "MRST-80/25"
+            },
+            {
+              "name": "MRST-81/25"
+            },
+            {
+              "name": "MRST-82/25"
+            },
+            {
+              "name": "MRST-83/25"
+            },
+            {
+              "name": "MMNP-80/25"
+            },
+            {
+              "name": "MMNP-81/25"
+            },
+            {
+              "name": "MMNP-82/25"
+            },
+            {
+              "name": "MMNP-83/25"
+            },
+            {
+              "name": "MMNP-30/25"
+            },
+            {
+              "name": "MMNP-31/25"
+            },
+            {
+              "name": "MBIA-30/25"
+            },
+            {
+              "name": "MBIA-31/25"
+            },
+            {
+              "name": "MIQT-30/25"
+            },
+            {
+              "name": "MIQT-31/25"
+            },
+            {
+              "name": "MBBA-30/25"
+            },
+            {
+              "name": "MMRT-30/25"
+            },
+            {
+              "name": "MTUR-30/25"
+            },
+            {
+              "name": "MTUR-31/25"
+            },
+            {
+              "name": "MBHA-30/25"
+            },
+            {
+              "name": "MBHA-31/25"
+            },
+            {
+              "name": "MST-30/25"
+            },
+            {
+              "name": "MST-31/25"
+            },
+            {
+              "name": "MMMT-30/25"
+            },
+            {
+              "name": "MMMT-31/25"
+            },
+            {
+              "name": "MBBA-83/25"
+            },
+            {
+              "name": "MBBA-84/25"
+            }
+          ],
+          "groups_count": 241
+        }
+      ],
+      "groups_count": 241
+    }
+  ]
+}
