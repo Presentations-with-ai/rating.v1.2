@@ -1,0 +1,3074 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Рейтинг студентов</title>
+  <style>
+    :root {
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: rgba(148, 163, 184, .24);
+      --line-strong: rgba(99, 102, 241, .28);
+      --surface: rgba(255, 255, 255, .94);
+      --surface-soft: rgba(248, 250, 252, .92);
+      --primary: #4f46e5;
+      --primary-2: #7c3aed;
+      --success: #059669;
+      --danger: #dc2626;
+      --shadow-lg: 0 24px 70px rgba(17, 24, 39, .22);
+      --shadow-md: 0 14px 38px rgba(17, 24, 39, .15);
+      --shadow-sm: 0 8px 20px rgba(17, 24, 39, .08);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: var(--ink);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: max(26px, env(safe-area-inset-top)) 0 max(44px, env(safe-area-inset-bottom));
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page { width: min(92vw, 480px); }
+    .card {
+      position: relative;
+      z-index: 2;
+      background: var(--surface);
+      width: 100%;
+      padding: clamp(18px, 4vw, 26px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, .62);
+      box-shadow: var(--shadow-lg);
+      animation: fade .35s cubic-bezier(.2,.8,.2,1);
+      text-align: center;
+      color: var(--ink);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow: visible;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
+    }
+    @keyframes fade { from { opacity:0; transform: translateY(10px) scale(.99); } to { opacity:1; transform: translateY(0) scale(1); } }
+    @keyframes riseIn { from { opacity:0; transform: translateY(14px) scale(.985); } to { opacity:1; transform: translateY(0) scale(1); } }
+    @keyframes softPop { 0% { transform: scale(.98); } 55% { transform: scale(1.015); } 100% { transform: scale(1); } }
+    @keyframes sheen { from { transform: translateX(-130%) skewX(-18deg); } to { transform: translateX(170%) skewX(-18deg); } }
+    @keyframes pulseRing {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); }
+      50% { box-shadow: 0 0 0 5px rgba(124,58,237,.10); }
+    }
+    @keyframes ripple {
+      from { opacity: .42; transform: translate(-50%, -50%) scale(0); }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+    }
+    .topBar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+    h1 { margin: 0; font-size: 28px; line-height: 1.08; letter-spacing: 0; text-align:left; }
+    .yearSelect {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      outline: none;
+      background: var(--surface-soft);
+      color: var(--ink);
+      border-radius: 16px;
+      padding: 11px 10px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      max-width: 132px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    .yearSelect:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .yearSelect:focus { border-color: var(--primary-2); background:#fff; box-shadow: 0 0 0 4px rgba(124,58,237,.13), var(--shadow-sm); }
+    .search { display: grid; gap: 11px; }
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      outline: none;
+      background: var(--surface-soft);
+      color: var(--ink);
+      border-radius: 18px;
+      padding: 16px 15px;
+      font-size: 16px;
+      font-weight: 650;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.76);
+    }
+    input:hover { border-color: rgba(99,102,241,.25); }
+    input:focus { border-color: var(--primary-2); background:#fff; box-shadow: 0 0 0 4px rgba(124,58,237,.13), var(--shadow-sm); }
+    input::placeholder { color: #9ca3af; font-weight: 600; }
+    .actions { display:grid; grid-template-columns: 1fr; gap: 10px; }
+    button {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 15px 16px;
+      background: linear-gradient(135deg, #4338ca 0%, var(--primary-2) 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 14px 32px rgba(79,70,229,.28);
+      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+    }
+    button::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      top: -35%;
+      bottom: -35%;
+      left: 0;
+      width: 42%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.32), transparent);
+      opacity: 0;
+      transform: translateX(-130%) skewX(-18deg);
+      pointer-events: none;
+    }
+    button:hover::before {
+      opacity: 1;
+      animation: sheen .9s ease;
+    }
+    button:focus-visible,
+    input:focus-visible,
+    .yearSelect:focus-visible,
+    .searchLink:focus-visible {
+      outline: 3px solid rgba(124,58,237,.24);
+      outline-offset: 3px;
+    }
+    button:disabled::before { display: none; }
+    .tapRipple {
+      position: absolute;
+      z-index: 2;
+      width: 18px;
+      height: 18px;
+      left: var(--x);
+      top: var(--y);
+      border-radius: 50%;
+      background: rgba(255,255,255,.72);
+      pointer-events: none;
+      animation: ripple .62s ease-out forwards;
+    }
+    button:hover { filter: brightness(1.04); box-shadow: 0 18px 36px rgba(91,33,182,.30); transform: translateY(-1px); }
+    button:active { transform: scale(.98); }
+    button:disabled { opacity: .58; cursor: not-allowed; box-shadow: none; transform: none; }
+    .groupBtn {
+      background: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-sm);
+    }
+    .miniStats {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 16px;
+    }
+    .mini {
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,250,252,.92));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 11px 7px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.78);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .mini:hover {
+      transform: translateY(-2px);
+      border-color: rgba(99,102,241,.28);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.78);
+    }
+    .mini b { display:block; font-size: 17px; color:var(--ink); line-height: 1.05; }
+    .mini span { display:block; margin-top: 4px; font-size: 10px; color:var(--muted); font-weight:800; }
+    .results { display: grid; gap: 13px; margin-top: 16px; }
+    .resultCard {
+      background: var(--surface);
+      border-radius: 22px;
+      padding: 17px;
+      border: 1px solid rgba(255,255,255,.56);
+      box-shadow: var(--shadow-md);
+      color:var(--ink);
+      animation: fade .28s cubic-bezier(.2,.8,.2,1);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .results .resultCard { animation: riseIn .34s cubic-bezier(.2,.8,.2,1) both; }
+    .results .resultCard:nth-child(2) { animation-delay: .035s; }
+    .results .resultCard:nth-child(3) { animation-delay: .07s; }
+    .results .resultCard:nth-child(4) { animation-delay: .105s; }
+    .results .resultCard:nth-child(5) { animation-delay: .14s; }
+    .results .resultCard:nth-child(6) { animation-delay: .175s; }
+    .resultCard:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(17, 24, 39, .20); border-color: rgba(255,255,255,.76); }
+    .empty { text-align:center; color:var(--muted); font-weight:700; line-height: 1.45; }
+    .moreBox { display:grid; gap:10px; margin-top: 2px; }
+    .moreInfo { text-align:center; color:var(--muted); font-size:13px; font-weight:800; }
+    .moreBtn {
+      background: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-sm);
+    }
+    .moreBtn:hover { box-shadow: 0 14px 28px rgba(17,24,39,.15); }
+    .studentTop { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .studentName { text-align:left; font-weight:900; line-height:1.18; font-size:18px; letter-spacing:0; }
+    .studentMeta { text-align:left; margin-top:6px; color:var(--muted); font-size:12px; font-weight:750; }
+    .rank {
+      min-width: 88px;
+      flex: 0 0 auto;
+      border-radius: 17px;
+      background: linear-gradient(180deg, #eef2ff, #f5f3ff);
+      color: var(--primary);
+      border: 1px solid var(--line-strong);
+      padding: 9px 8px;
+      text-align: center;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
+      animation: softPop .42s ease both;
+    }
+    .rank b { display:block; font-size: 19px; line-height:1; }
+    .rank span { display:block; margin-top:4px; font-size:10px; color:#6366f1; }
+    .grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-top: 14px; }
+    .cell { background:var(--surface-soft); border:1px solid var(--line); border-radius:16px; padding:12px 11px; box-shadow: inset 0 1px 0 rgba(255,255,255,.72); transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+    .cell:hover { transform: translateY(-1px); border-color: rgba(99,102,241,.26); background:#ffffff; }
+    .cell span { display:block; font-size:10px; color:var(--muted); font-weight:850; margin-bottom:5px; }
+    .cell b { display:block; font-size:15px; color:var(--ink); line-height: 1.25; }
+    .groupCard {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      cursor:pointer;
+      border: 1px solid rgba(255,255,255,.56);
+      text-align:left;
+    }
+    .groupName { font-size:19px; font-weight:900; color:var(--ink); line-height:1.1; }
+    .groupMeta { margin-top:6px; color:var(--muted); font-size:12px; font-weight:800; }
+    .groupPill {
+      flex: 0 0 auto;
+      border-radius: 16px;
+      padding: 10px 12px;
+      min-width: 72px;
+      background:#eef2ff;
+      color:var(--primary);
+      text-align:center;
+      font-size:18px;
+      font-weight:900;
+      border: 1px solid var(--line-strong);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .groupCard:hover .groupPill { transform: scale(1.04); box-shadow: 0 10px 22px rgba(79,70,229,.16); }
+
+    .suggestions {
+      display: none;
+      margin-top: -2px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.98);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      text-align: left;
+    }
+    .suggestions.show { display: block; }
+    .suggestions.show { animation: riseIn .22s cubic-bezier(.2,.8,.2,1) both; }
+    .suggestionItem {
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #f3f4f6;
+      background: #fff;
+      color: var(--ink);
+      box-shadow: none;
+      border-radius: 0;
+      padding: 13px 14px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      transition: background .16s ease, padding-left .16s ease;
+    }
+    .suggestionItem:last-child { border-bottom: 0; }
+    .suggestionItem:hover { filter: none; background: #f9fafb; box-shadow: none; padding-left: 18px; }
+    .suggestionItem:active { transform: none; }
+    .suggestionName { font-weight: 900; color: var(--ink); }
+    .suggestionCount { font-size: 12px; color: var(--primary); font-weight: 900; background: #eef2ff; border-radius: 999px; padding: 5px 9px; }
+
+    .suggestionText { min-width: 0; }
+    .suggestionName { display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .suggestionMeta { display:block; margin-top: 4px; font-size: 11px; color:var(--muted); font-weight:800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cell b { word-break: break-word; }
+    .facultyBadge {
+      display:inline-flex;
+      align-items:center;
+      margin-top: 8px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      background:#f0fdf4;
+      color:var(--success);
+      border:1px solid #bbf7d0;
+      font-size: 11px;
+      font-weight:900;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .facultyBadge:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(5,150,105,.12); }
+    .searchLink {
+      display: inline;
+      width: auto;
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      box-shadow: none;
+      font: inherit;
+      font-weight: inherit;
+      text-align: inherit;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      overflow: visible;
+      isolation: auto;
+      line-height: inherit;
+    }
+    .searchLink::before { display: none; }
+    .searchLink:hover {
+      filter: none;
+      box-shadow: none;
+      color: var(--primary);
+    }
+    .searchLink:active { transform: none; }
+    .facultyBadge .searchLink { color:var(--success); }
+
+
+    .calcHeaderBtn {
+      width: auto;
+      padding: 11px 13px;
+      border-radius: 16px;
+      background: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-sm);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      animation: pulseRing 2.8s ease-in-out infinite;
+    }
+    .mainTitle { margin-bottom: 16px; }
+    .calcPage {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      overflow-y: auto;
+      background: #f2f4f8;
+      color: #1f2937;
+      padding: 18px;
+    }
+    .calcPage[hidden] { display: none; }
+    .calcApp {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .calcNav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .calcBackBtn {
+      width: auto;
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      padding: 12px 14px;
+      border-radius: 16px;
+    }
+    .calcPage .calcTop { margin-bottom: 18px; }
+    .calcPage h2 {
+      font-size: 30px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+    }
+    .calcSubtitle {
+      color: #6b7280;
+      font-size: 15px;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .calcResultCard {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+    }
+    .calcResultTitle {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .calcGpa {
+      font-size: 42px;
+      font-weight: 900;
+      color: #22963f;
+      margin-bottom: 8px;
+    }
+    .calcSmallInfo {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+    .calcSubjects {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .calcSubject {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      border: 1px solid #e5e7eb;
+    }
+    .calcSubjectHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .calcSubjectTitle {
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .calcDeleteBtn {
+      border: none;
+      background: #fee2e2;
+      color: #b91c1c;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      box-shadow: none;
+    }
+    .calcGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .calcPage label {
+      display: block;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .calcGradeBadge {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    .calcButtons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .calcPage .calcAddBtn {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(37,99,235,.20);
+    }
+    .calcPage .calcClearBtn {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: none;
+    }
+    .calcTableCard {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+    }
+    .calcTableTitle {
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    .calcPage table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+    .calcPage th, .calcPage td {
+      padding: 10px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    .calcPage th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+    .calcGreen { color: #22963f; font-weight: 800; }
+    .calcOrange { color: #b7791f; font-weight: 800; }
+    .calcRed { color: #dc2626; font-weight: 800; }
+    @media (max-width: 520px) {
+      .topBar { gap: 8px; }
+      .calcHeaderBtn { font-size: 12px; padding: 9px 9px; }
+      .calcPage { padding: 14px; }
+      .calcPage h2 { font-size: 28px; }
+      .calcGrid { grid-template-columns: 1fr; }
+      .calcButtons { grid-template-columns: 1fr; }
+      .calcGpa { font-size: 38px; }
+      .topBar {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .calcHeaderBtn,
+      .yearPicker,
+      .yearPickerBtn {
+        width: 100%;
+        max-width: none;
+      }
+      .yearMenu {
+        display: none;
+        position: static;
+        width: 100%;
+        margin-top: 8px;
+        transform: translateY(-4px) scale(.98);
+      }
+      .yearPicker.open .yearMenu {
+        display: grid;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    #tgFrame { display:none; width:0; height:0; border:0; }
+
+    /* Big visual upgrade: everything above the unchanged page background. */
+    .page {
+      width: min(94vw, 560px);
+      perspective: 1100px;
+    }
+    .card {
+      padding: clamp(20px, 4.4vw, 30px);
+      border-radius: 30px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.96), rgba(244,247,255,.90)),
+        rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow:
+        0 30px 90px rgba(24, 18, 72, .30),
+        0 10px 26px rgba(17, 24, 39, .14),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, rgba(79,70,229,.16), transparent 30%),
+        radial-gradient(circle at 82% 12%, rgba(16,185,129,.16), transparent 28%),
+        radial-gradient(circle at 20% 88%, rgba(236,72,153,.10), transparent 30%);
+      mix-blend-mode: multiply;
+      opacity: .9;
+    }
+    .topBar,
+    .mainTitle,
+    .search,
+    .miniStats {
+      position: relative;
+      z-index: 1;
+    }
+    .topBar {
+      z-index: 80;
+    }
+    .search,
+    .miniStats {
+      z-index: 5;
+    }
+    .topBar {
+      align-items: stretch;
+      gap: 10px;
+    }
+    h1.mainTitle {
+      max-width: 12ch;
+      margin-bottom: 18px;
+      font-size: clamp(31px, 5vw, 42px);
+      line-height: .96;
+      font-weight: 950;
+      color: #0f172a;
+      text-shadow: 0 1px 0 rgba(255,255,255,.65);
+    }
+    .calcHeaderBtn,
+    .yearSelect {
+      min-height: 46px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.78);
+      box-shadow:
+        0 12px 26px rgba(31, 41, 55, .12),
+        inset 0 1px 0 rgba(255,255,255,.86);
+    }
+    .calcHeaderBtn {
+      flex: 1 1 auto;
+      background: linear-gradient(135deg, #111827, #4338ca 48%, #7c3aed);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.38);
+      box-shadow: 0 16px 34px rgba(67,56,202,.33);
+    }
+    .yearSelect {
+      flex: 0 0 145px;
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #4f46e5 50%),
+        linear-gradient(135deg, #4f46e5 50%, transparent 50%),
+        linear-gradient(135deg, rgba(255,255,255,.9), rgba(241,245,249,.92));
+      background-position:
+        calc(100% - 17px) 20px,
+        calc(100% - 12px) 20px,
+        0 0;
+      background-size: 5px 5px, 5px 5px, 100% 100%;
+      background-repeat: no-repeat;
+      padding-right: 30px;
+    }
+    .search {
+      gap: 12px;
+      padding: 14px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.48);
+      border: 1px solid rgba(255,255,255,.64);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+    }
+    input {
+      min-height: 56px;
+      border-radius: 20px;
+      border-color: rgba(79,70,229,.18);
+      background: #fff;
+      font-size: 15.5px;
+      box-shadow:
+        0 12px 26px rgba(31,41,55,.08),
+        inset 0 1px 0 rgba(255,255,255,.94);
+    }
+    input:focus {
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 5px rgba(124,58,237,.16),
+        0 18px 38px rgba(79,70,229,.18);
+    }
+    button {
+      min-height: 54px;
+      border-radius: 20px;
+      letter-spacing: .2px;
+      background:
+        linear-gradient(135deg, #111827 0%, #4338ca 42%, #ec4899 100%);
+      box-shadow:
+        0 18px 42px rgba(67,56,202,.34),
+        inset 0 1px 0 rgba(255,255,255,.24);
+    }
+    button::before {
+      z-index: 0;
+      width: 48%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.46), transparent);
+    }
+    button:hover {
+      filter: saturate(1.12) brightness(1.05);
+      transform: translateY(-2px);
+      box-shadow:
+        0 22px 48px rgba(67,56,202,.42),
+        inset 0 1px 0 rgba(255,255,255,.30);
+    }
+    button:active {
+      transform: translateY(0) scale(.985);
+    }
+    .miniStats {
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .mini {
+      position: relative;
+      overflow: hidden;
+      min-height: 78px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(239,246,255,.94));
+      border-color: rgba(99,102,241,.20);
+      box-shadow:
+        0 12px 26px rgba(17,24,39,.09),
+        inset 0 1px 0 rgba(255,255,255,.92);
+    }
+    .mini::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #4338ca, #06b6d4, #10b981);
+    }
+    .mini b {
+      font-size: 22px;
+      font-weight: 950;
+    }
+    .mini span {
+      font-size: 9px;
+      letter-spacing: .7px;
+    }
+    .results {
+      width: min(94vw, 560px);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .resultCard {
+      position: relative;
+      overflow: hidden;
+      border-radius: 26px;
+      padding: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.96), rgba(248,250,252,.90));
+      border: 1px solid rgba(255,255,255,.72);
+      box-shadow:
+        0 22px 62px rgba(24, 18, 72, .22),
+        0 8px 20px rgba(17,24,39,.12),
+        inset 0 1px 0 rgba(255,255,255,.92);
+    }
+    .resultCard::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #111827, #4f46e5, #06b6d4, #10b981);
+      opacity: .9;
+    }
+    .resultCard:hover {
+      transform: translateY(-5px) rotateX(.8deg);
+      box-shadow:
+        0 30px 80px rgba(24, 18, 72, .28),
+        0 12px 28px rgba(17,24,39,.16);
+    }
+    .empty {
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      padding-top: 26px;
+      font-size: 15px;
+    }
+    .studentTop {
+      gap: 14px;
+      align-items: stretch;
+    }
+    .studentName {
+      font-size: 20px;
+      line-height: 1.12;
+      color: #0f172a;
+    }
+    .studentMeta {
+      margin-top: 8px;
+      font-size: 12.5px;
+    }
+    .facultyBadge {
+      max-width: 100%;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ecfdf5, #f0fdfa);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
+    }
+    .rank {
+      min-width: 102px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 28% 16%, rgba(255,255,255,.86), transparent 35%),
+        linear-gradient(135deg, #312e81, #4f46e5 48%, #06b6d4);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.34);
+      box-shadow:
+        0 16px 34px rgba(79,70,229,.30),
+        inset 0 1px 0 rgba(255,255,255,.26);
+    }
+    .rank b {
+      font-size: 24px;
+    }
+    .rank span {
+      color: rgba(255,255,255,.78);
+      letter-spacing: .6px;
+    }
+    .grid {
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .cell {
+      min-height: 76px;
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.96), rgba(241,245,249,.92));
+      border-color: rgba(148,163,184,.30);
+    }
+    .cell:hover {
+      transform: translateY(-3px);
+      border-color: rgba(79,70,229,.30);
+      box-shadow: 0 13px 28px rgba(17,24,39,.10);
+    }
+    .cell span {
+      color: #64748b;
+      letter-spacing: .55px;
+    }
+    .cell b {
+      font-size: 16px;
+      color: #0f172a;
+    }
+    .groupCard {
+      min-height: 90px;
+      padding: 20px;
+    }
+    .groupName {
+      font-size: 22px;
+    }
+    .groupPill {
+      min-width: 82px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #111827, #4f46e5);
+      color: #fff;
+      border-color: rgba(255,255,255,.34);
+      box-shadow: 0 14px 30px rgba(79,70,229,.26);
+    }
+    .suggestions {
+      border-radius: 22px;
+      box-shadow: 0 22px 52px rgba(17,24,39,.18);
+    }
+    .suggestionItem {
+      min-height: 62px;
+    }
+    .suggestionItem:hover {
+      background: linear-gradient(90deg, #eef2ff, #fff);
+    }
+    .suggestionCount {
+      background: linear-gradient(135deg, #eef2ff, #dbeafe);
+      border: 1px solid rgba(79,70,229,.16);
+    }
+    .moreBox {
+      padding-top: 24px;
+    }
+    .moreBtn {
+      background: linear-gradient(135deg, #ffffff, #eef2ff);
+      color: #312e81;
+    }
+    .calcPage {
+      background:
+        radial-gradient(circle at top left, rgba(79,70,229,.15), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(16,185,129,.14), transparent 32%),
+        #eef2f7;
+    }
+    .calcApp {
+      max-width: 860px;
+    }
+    .calcResultCard,
+    .calcSubject,
+    .calcTableCard {
+      border-radius: 26px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.74);
+      box-shadow:
+        0 18px 46px rgba(17,24,39,.11),
+        inset 0 1px 0 rgba(255,255,255,.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .calcResultCard {
+      background:
+        linear-gradient(135deg, rgba(17,24,39,.96), rgba(49,46,129,.94));
+      color: #fff;
+      border-color: rgba(255,255,255,.18);
+    }
+    .calcResultTitle,
+    .calcSmallInfo {
+      color: rgba(255,255,255,.72);
+    }
+    .calcGpa {
+      color: #86efac;
+      text-shadow: 0 0 26px rgba(134,239,172,.28);
+    }
+    .calcDeleteBtn {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      color: #991b1b;
+    }
+    .calcPage .calcAddBtn {
+      background: linear-gradient(135deg, #111827, #2563eb, #06b6d4);
+      box-shadow: 0 16px 34px rgba(37,99,235,.26);
+    }
+    .calcPage .calcClearBtn {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border: 1px solid rgba(148,163,184,.36);
+      box-shadow: 0 10px 22px rgba(17,24,39,.08);
+    }
+
+    /* GPA calculator polish. */
+    .calcPage {
+      background:
+        linear-gradient(135deg, #eef3fb 0%, #f8fbff 48%, #e8f7f8 100%);
+    }
+    .calcApp {
+      padding: 8px 0 28px;
+    }
+    .calcNav {
+      margin-bottom: 18px;
+    }
+    .calcBackBtn {
+      min-height: 38px;
+      width: auto;
+      padding: 9px 13px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.92);
+      color: #111827;
+      border: 1px solid rgba(148,163,184,.22);
+      box-shadow: 0 10px 24px rgba(15,23,42,.10);
+      font-size: 13px;
+    }
+    .calcBackBtn:hover {
+      filter: none;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(15,23,42,.13);
+    }
+    .calcPage h2 {
+      color: #0f172a;
+      letter-spacing: 0;
+      font-weight: 950;
+    }
+    .calcSubtitle {
+      max-width: 620px;
+      color: #64748b;
+      font-size: 13px;
+    }
+    .calcResultCard {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, #15183e 0%, #25215f 56%, #3730a3 100%);
+      border: 1px solid rgba(255,255,255,.20);
+      box-shadow:
+        0 18px 42px rgba(30,27,75,.22),
+        inset 0 1px 0 rgba(255,255,255,.18);
+    }
+    .calcResultCard::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(34,211,238,.16), transparent 42%);
+    }
+    .calcResultTitle,
+    .calcGpa,
+    .calcSmallInfo {
+      position: relative;
+      z-index: 1;
+    }
+    .calcResultTitle {
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(255,255,255,.72);
+    }
+    .calcGpa {
+      margin: 6px 0 8px;
+      font-size: 34px;
+      color: #67e8f9;
+    }
+    .calcSmallInfo {
+      font-size: 12px;
+      color: rgba(255,255,255,.74);
+    }
+    .calcSubjects {
+      gap: 10px;
+    }
+    .calcSubject,
+    .calcTableCard {
+      border-radius: 20px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(226,232,240,.90);
+      box-shadow:
+        0 14px 32px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.92);
+    }
+    .calcSubject {
+      padding: 16px;
+    }
+    .calcSubjectHeader {
+      margin-bottom: 12px;
+    }
+    .calcSubjectTitle,
+    .calcTableTitle {
+      color: #111827;
+      font-size: 16px;
+      font-weight: 950;
+    }
+    .calcDeleteBtn {
+      width: 36px;
+      min-width: 36px;
+      height: 36px;
+      min-height: 36px;
+      aspect-ratio: 1 / 1;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 36px;
+      padding: 0;
+      border-radius: 50%;
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      box-shadow: none;
+      font-size: 17px;
+      line-height: 1;
+      font-weight: 950;
+    }
+    .calcDeleteBtn::before {
+      display: none;
+    }
+    .calcDeleteBtn:hover {
+      filter: none;
+      transform: scale(1.04);
+      background: #fecaca;
+      box-shadow: 0 10px 20px rgba(185,28,28,.12);
+    }
+    .calcPage label {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .calcPage input {
+      min-height: 42px;
+      border-radius: 13px;
+      padding: 11px 12px;
+      font-size: 13px;
+      border-color: rgba(99,102,241,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .calcGradeBadge {
+      margin-top: 9px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eef6ff;
+      color: #2563eb;
+      border-color: #bfdbfe;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .calcButtons {
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .calcPage .calcAddBtn,
+    .calcPage .calcClearBtn {
+      min-height: 44px;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+    .calcPage .calcAddBtn {
+      background: linear-gradient(135deg, #1e1b4b, #4338ca 58%, #0891b2);
+      box-shadow: 0 14px 28px rgba(49,46,129,.20);
+    }
+    .calcPage .calcClearBtn {
+      color: #111827;
+      background: linear-gradient(135deg, #ffffff, #eef2f7);
+      border: 1px solid rgba(148,163,184,.28);
+    }
+    .calcTableCard {
+      padding: 14px;
+    }
+    .calcPage th,
+    .calcPage td {
+      padding: 9px 5px;
+    }
+
+    /* Cohesive cold palette + SVG details. */
+    .svgIcon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    button {
+      background: linear-gradient(135deg, #191b49 0%, #4338ca 58%, #22d3ee 132%);
+    }
+    .card {
+      background:
+        linear-gradient(150deg, rgba(255,255,255,.97), rgba(238,242,255,.93)),
+        rgba(255,255,255,.94);
+    }
+    .card::after {
+      background:
+        linear-gradient(125deg, rgba(49,46,129,.13), transparent 36%),
+        radial-gradient(circle at 82% 12%, rgba(34,211,238,.14), transparent 30%),
+        radial-gradient(circle at 12% 88%, rgba(99,102,241,.10), transparent 34%);
+    }
+    .calcHeaderBtn,
+    #btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #191b49 0%, #4338ca 56%, #22d3ee 128%);
+      box-shadow:
+        0 18px 42px rgba(49,46,129,.34),
+        inset 0 1px 0 rgba(255,255,255,.24);
+    }
+    #btn {
+      min-height: 58px;
+      font-size: 18px;
+    }
+    .calcHeaderBtn:hover,
+    #btn:hover {
+      box-shadow:
+        0 24px 52px rgba(49,46,129,.42),
+        0 0 0 1px rgba(255,255,255,.18) inset;
+    }
+    .searchField {
+      position: relative;
+    }
+    .searchField > .svgIcon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      z-index: 2;
+      transform: translateY(-50%);
+      color: #4f46e5;
+      pointer-events: none;
+    }
+    .searchField input {
+      padding-left: 50px;
+      border-color: rgba(99,102,241,.22);
+    }
+    .mini {
+      grid-template-columns: 42px 1fr;
+      grid-template-areas:
+        "icon value"
+        "icon label";
+      place-items: center stretch;
+      column-gap: 11px;
+      text-align: left;
+      background: linear-gradient(150deg, rgba(255,255,255,.98), rgba(239,246,255,.94));
+    }
+    .mini::before,
+    .resultCard::before {
+      background: linear-gradient(90deg, #312e81, #4f46e5, #22d3ee);
+    }
+    .miniIcon {
+      grid-area: icon;
+      width: 42px;
+      height: 42px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 15px;
+      color: #3730a3;
+      background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+      border: 1px solid rgba(99,102,241,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .mini b {
+      grid-area: value;
+    }
+    .mini > span {
+      grid-area: label;
+    }
+    .rank,
+    .groupPill {
+      background: linear-gradient(135deg, #1e1b4b, #4338ca 58%, #0891b2);
+    }
+    .facultyBadge {
+      color: #0e7490;
+      background: linear-gradient(135deg, #ecfeff, #eef2ff);
+      border-color: rgba(34,211,238,.32);
+    }
+    .facultyBadge .searchLink {
+      color: #0e7490;
+    }
+    .suggestionItem:hover {
+      background: linear-gradient(90deg, #eef2ff, #f8fafc);
+    }
+    .calcGpa {
+      color: #67e8f9;
+      text-shadow: 0 0 26px rgba(103,232,249,.28);
+    }
+    .yearSelect {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .yearPicker {
+      position: relative;
+      z-index: 120;
+      flex: 0 0 158px;
+    }
+    .yearPickerBtn {
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      width: 100%;
+      padding: 10px 12px;
+      justify-content: space-between;
+      gap: 8px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(238,242,255,.96));
+      color: #111827;
+      border: 1px solid rgba(99,102,241,.22);
+      box-shadow:
+        0 14px 30px rgba(31,41,55,.13),
+        inset 0 1px 0 rgba(255,255,255,.92);
+      font-size: 14px;
+      font-weight: 950;
+    }
+    .yearPickerBtn:hover {
+      filter: none;
+      transform: translateY(-2px);
+      box-shadow:
+        0 18px 38px rgba(49,46,129,.18),
+        0 0 0 4px rgba(99,102,241,.08);
+    }
+    .yearPickerBtn .calendarIcon {
+      color: #4338ca;
+    }
+    .yearPickerBtn .chevronIcon {
+      width: 16px;
+      height: 16px;
+      color: #64748b;
+      transition: transform .18s ease;
+    }
+    .yearPicker.open .chevronIcon {
+      transform: rotate(180deg);
+    }
+    .yearPicker.open {
+      z-index: 300;
+    }
+    .yearMenu {
+      position: absolute;
+      z-index: 200;
+      top: calc(100% + 10px);
+      left: 0;
+      right: 0;
+      display: grid;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 1px solid rgba(99,102,241,.20);
+      box-shadow:
+        0 24px 62px rgba(17,24,39,.30),
+        inset 0 1px 0 rgba(255,255,255,.9);
+      backdrop-filter: none;
+      opacity: 0;
+      transform: translateY(-6px) scale(.98);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .yearPicker.open .yearMenu {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .yearOption {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 9px 10px;
+      justify-content: flex-start;
+      border-radius: 14px;
+      background: transparent;
+      color: #334155;
+      border: 0;
+      box-shadow: none;
+      font-size: 13px;
+      font-weight: 850;
+    }
+    .yearOption::before {
+      display: none;
+    }
+    .yearOption:hover {
+      filter: none;
+      transform: translateX(2px);
+      background: #eef2ff;
+      color: #312e81;
+      box-shadow: none;
+    }
+    .yearOption.active {
+      background: linear-gradient(135deg, #312e81, #4f46e5);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(79,70,229,.24);
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding-top: max(10px, env(safe-area-inset-top));
+        padding-bottom: max(26px, env(safe-area-inset-bottom));
+        overflow-x: hidden;
+      }
+      .page, .results { width: min(94vw, 390px); }
+      .card {
+        padding: 16px;
+        border-radius: 26px;
+      }
+      .topBar {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .calcHeaderBtn,
+      .yearSelect,
+      .yearPicker,
+      .yearPickerBtn {
+        width: 100%;
+        max-width: none;
+        min-height: 48px;
+        font-size: 13px;
+      }
+      .yearMenu {
+        top: calc(100% + 8px);
+      }
+      h1.mainTitle {
+        max-width: none;
+        margin-top: 6px;
+        font-size: 34px;
+        line-height: .98;
+      }
+      .search {
+        padding: 12px;
+        border-radius: 22px;
+      }
+      input {
+        min-height: 54px;
+        font-size: 15px;
+      }
+      .miniStats {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .mini {
+        min-height: 58px;
+        grid-template-columns: auto 1fr;
+        justify-content: start;
+        text-align: left;
+        padding: 12px 14px;
+      }
+      .mini::before {
+        width: 5px;
+        height: 100%;
+        right: auto;
+      }
+      .mini b {
+        min-width: 78px;
+        font-size: 21px;
+      }
+      .mini span {
+        margin-top: 0;
+        font-size: 10px;
+      }
+      .resultCard {
+        border-radius: 24px;
+        padding: 16px;
+      }
+      .studentTop {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .studentName {
+        font-size: 19px;
+      }
+      .rank {
+        width: 100%;
+        min-height: 66px;
+        margin-top: 2px;
+        grid-template-columns: auto auto;
+        justify-content: center;
+        gap: 10px;
+      }
+      .rank b {
+        font-size: 25px;
+      }
+      .grid { grid-template-columns: 1fr; }
+      .cell {
+        min-height: 64px;
+        padding: 12px 13px;
+      }
+      .groupCard {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .groupPill {
+        width: 100%;
+      }
+      .calcPage {
+        padding: 12px;
+      }
+    }
+    @media (max-width: 520px) {
+      .yearMenu {
+        display: none;
+        position: static;
+        width: 100%;
+        margin-top: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-4px) scale(.98);
+      }
+      .yearPicker.open .yearMenu {
+        display: grid;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Compact density pass: keep the style, remove the oversized result cards. */
+    .results {
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .resultCard {
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow:
+        0 14px 34px rgba(24, 18, 72, .18),
+        0 5px 14px rgba(17,24,39,.10),
+        inset 0 1px 0 rgba(255,255,255,.9);
+    }
+    .resultCard:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 18px 42px rgba(24, 18, 72, .20),
+        0 7px 18px rgba(17,24,39,.12);
+    }
+    .resultCard::before {
+      height: 3px;
+    }
+    .studentTop {
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .studentName {
+      font-size: 17px;
+      line-height: 1.14;
+    }
+    .studentMeta {
+      margin-top: 5px;
+      font-size: 11px;
+    }
+    .facultyBadge {
+      margin-top: 7px;
+      padding: 5px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      line-height: 1.2;
+    }
+    .rank {
+      width: 72px;
+      min-width: 72px;
+      min-height: 54px;
+      border-radius: 14px;
+      padding: 7px 6px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.18), rgba(255,255,255,0) 35%),
+        linear-gradient(135deg, #25215f 0%, #4338ca 64%, #0ea5e9 130%);
+      border: 1px solid rgba(255,255,255,.28);
+      box-shadow:
+        0 10px 22px rgba(49,46,129,.22),
+        inset 0 1px 0 rgba(255,255,255,.24);
+    }
+    .rank b {
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    .rank span {
+      font-size: 8px;
+      margin-top: 2px;
+      letter-spacing: .4px;
+    }
+    .grid {
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .cell {
+      min-height: 56px;
+      border-radius: 14px;
+      padding: 9px 10px;
+    }
+    .cell:hover {
+      transform: translateY(-1px);
+    }
+    .cell span {
+      font-size: 9px;
+      margin-bottom: 4px;
+    }
+    .cell b {
+      font-size: 13px;
+      line-height: 1.25;
+    }
+    .groupCard {
+      min-height: 70px;
+      padding: 14px;
+    }
+    .groupName {
+      font-size: 18px;
+    }
+    .groupMeta {
+      font-size: 11px;
+    }
+    .groupPill {
+      min-width: 66px;
+      border-radius: 16px;
+      padding: 8px 10px;
+      font-size: 16px;
+    }
+    @media (min-width: 560px) {
+      .page,
+      .results {
+        width: min(92vw, 520px);
+      }
+    }
+    @media (max-width: 520px) {
+      .resultCard {
+        border-radius: 18px;
+        padding: 13px;
+      }
+      .studentTop {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+      }
+      .studentName {
+        font-size: 16px;
+      }
+      .rank {
+        width: 66px;
+        min-width: 66px;
+        min-height: 50px;
+        margin-top: 0;
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+      }
+      .cell {
+        min-height: 48px;
+        padding: 8px 9px;
+      }
+      .cell span { font-size: 8px; }
+      .cell b { font-size: 12px; }
+    }
+    .calcPage .calcResultCard {
+      border-radius: 20px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, #15183e 0%, #25215f 56%, #3730a3 100%);
+    }
+    .calcPage .calcGpa {
+      font-size: 34px;
+      color: #67e8f9;
+    }
+    .calcPage .calcDeleteBtn {
+      width: 36px;
+      min-width: 36px;
+      height: 36px;
+      min-height: 36px;
+      aspect-ratio: 1 / 1;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 36px;
+      padding: 0;
+      border-radius: 50%;
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      box-shadow: none;
+      font-size: 17px;
+      line-height: 1;
+    }
+    @media (max-width: 520px) {
+      .calcPage h2 {
+        font-size: 24px;
+      }
+      .calcSubject {
+        padding: 14px;
+      }
+      .calcPage .calcDeleteBtn {
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
+        min-height: 34px;
+        flex-basis: 34px;
+      }
+    }
+
+    /* Final calculator harmonization with the main rating UI. */
+    .calcPage {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #111827;
+      padding: 22px 16px 34px;
+    }
+    .calcApp {
+      width: min(94vw, 720px);
+      padding: 0;
+    }
+    .calcNav {
+      margin-bottom: 14px;
+    }
+    .calcBackBtn {
+      min-height: 40px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.94);
+      color: #1e1b4b;
+      border: 1px solid rgba(255,255,255,.64);
+      box-shadow: 0 14px 32px rgba(24,18,72,.20);
+    }
+    .calcPage .calcTop {
+      margin-bottom: 14px;
+      padding: 18px;
+      border-radius: 24px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.96), rgba(238,242,255,.90));
+      border: 1px solid rgba(255,255,255,.68);
+      box-shadow:
+        0 22px 56px rgba(24,18,72,.22),
+        inset 0 1px 0 rgba(255,255,255,.90);
+    }
+    .calcPage h2 {
+      color: #111827;
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .calcSubtitle {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .calcPage .calcResultCard,
+    .calcSubject,
+    .calcTableCard {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.96), rgba(248,250,252,.92));
+      border: 1px solid rgba(255,255,255,.68);
+      box-shadow:
+        0 18px 46px rgba(24,18,72,.20),
+        inset 0 1px 0 rgba(255,255,255,.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .calcPage .calcResultCard {
+      color: #111827;
+      border-radius: 22px;
+    }
+    .calcPage .calcResultCard::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #312e81, #4f46e5, #22d3ee);
+    }
+    .calcPage .calcResultCard::after {
+      background:
+        radial-gradient(circle at 92% 12%, rgba(34,211,238,.16), transparent 30%),
+        linear-gradient(125deg, rgba(79,70,229,.10), transparent 42%);
+    }
+    .calcResultTitle {
+      color: #64748b;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .calcPage .calcGpa {
+      color: #312e81;
+      font-size: 38px;
+      text-shadow: none;
+    }
+    .calcSmallInfo {
+      color: #64748b;
+      font-size: 12px;
+    }
+    .calcSubject,
+    .calcTableCard {
+      border-radius: 22px;
+    }
+    .calcSubjectTitle,
+    .calcTableTitle {
+      color: #111827;
+    }
+    .calcSubjectHeader {
+      align-items: center;
+    }
+    .calcPage input {
+      background: #ffffff;
+      border-color: rgba(99,102,241,.24);
+    }
+    .calcPage input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 4px rgba(79,70,229,.14);
+    }
+    .calcGradeBadge {
+      background: linear-gradient(135deg, #eef2ff, #ecfeff);
+      color: #3730a3;
+      border-color: rgba(99,102,241,.24);
+    }
+    .calcPage .calcAddBtn {
+      background: linear-gradient(135deg, #191b49 0%, #4338ca 58%, #22d3ee 132%);
+      box-shadow: 0 16px 34px rgba(49,46,129,.26);
+    }
+    .calcPage .calcClearBtn {
+      background: rgba(255,255,255,.94);
+      color: #1e1b4b;
+      border: 1px solid rgba(99,102,241,.20);
+      box-shadow: 0 12px 26px rgba(24,18,72,.12);
+    }
+    .calcPage .calcDeleteBtn {
+      background: #fff1f2;
+      color: #be123c;
+      border-color: #fecdd3;
+    }
+    .calcPage .calcDeleteBtn:hover {
+      background: #ffe4e6;
+    }
+    .calcGreen { color: #059669; }
+    .calcOrange { color: #d97706; }
+    .calcRed { color: #e11d48; }
+    @media (max-width: 520px) {
+      .calcPage {
+        padding: 12px;
+      }
+      .calcPage .calcTop {
+        padding: 16px;
+        border-radius: 22px;
+      }
+      .calcPage h2 {
+        font-size: 25px;
+      }
+      .calcPage .calcGpa {
+        font-size: 34px;
+      }
+      .calcGrid {
+        gap: 10px;
+      }
+    }
+
+    /* Modern calculator redesign: cleaner, quieter, less glossy. */
+    .calcPage {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 24px 16px 36px;
+    }
+    .calcApp {
+      width: min(94vw, 760px);
+      margin: 0 auto;
+    }
+    .calcNav {
+      margin-bottom: 18px;
+    }
+    .calcBackBtn {
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.92);
+      color: #111827;
+      border: 1px solid rgba(255,255,255,.58);
+      box-shadow: 0 10px 26px rgba(17,24,39,.14);
+      font-size: 13px;
+      font-weight: 850;
+    }
+    .calcBackBtn:hover {
+      filter: none;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(17,24,39,.18);
+    }
+    .calcPage .calcTop {
+      padding: 0;
+      margin-bottom: 18px;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+    .calcPage h2 {
+      color: #ffffff;
+      font-size: clamp(28px, 5vw, 40px);
+      line-height: 1.02;
+      font-weight: 950;
+      text-shadow: 0 10px 28px rgba(17,24,39,.22);
+    }
+    .calcSubtitle {
+      max-width: 620px;
+      margin-top: 8px;
+      color: rgba(255,255,255,.76);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .calcPage .calcResultCard,
+    .calcSubject,
+    .calcTableCard {
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(255,255,255,.68);
+      border-radius: 16px;
+      box-shadow: 0 18px 44px rgba(17,24,39,.18);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .calcPage .calcResultCard {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 14px;
+      padding: 18px;
+      color: #111827;
+      overflow: hidden;
+    }
+    .calcPage .calcResultCard::before {
+      height: 4px;
+      background: linear-gradient(90deg, #4f46e5, #22d3ee);
+    }
+    .calcPage .calcResultCard::after {
+      display: none;
+    }
+    .calcResultTitle {
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+    }
+    .calcPage .calcGpa {
+      grid-row: 1 / span 2;
+      grid-column: 2;
+      margin: 0;
+      color: #111827;
+      font-size: clamp(34px, 7vw, 52px);
+      line-height: .9;
+      font-weight: 950;
+      white-space: nowrap;
+      text-shadow: none;
+    }
+    .calcSmallInfo {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .calcSubjects {
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .calcSubject {
+      position: relative;
+      padding: 16px;
+    }
+    .calcSubject::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 16px;
+      bottom: 16px;
+      width: 3px;
+      border-radius: 999px;
+      background: #4f46e5;
+    }
+    .calcSubjectHeader {
+      margin-bottom: 12px;
+      padding-left: 8px;
+    }
+    .calcSubjectTitle,
+    .calcTableTitle {
+      color: #111827;
+      font-size: 16px;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+    .calcPage label {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .calcPage input {
+      min-height: 42px;
+      border-radius: 10px;
+      padding: 10px 11px;
+      background: #ffffff;
+      border: 1px solid #dbe4f0;
+      box-shadow: none;
+      font-size: 13px;
+    }
+    .calcPage input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79,70,229,.14);
+    }
+    .calcGradeBadge {
+      margin-top: 10px;
+      padding: 6px 9px;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: #334155;
+      border: 1px solid #dbe4f0;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .calcPage .calcDeleteBtn {
+      width: 34px;
+      min-width: 34px;
+      height: 34px;
+      min-height: 34px;
+      flex: 0 0 34px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      background: #fff1f2;
+      color: #be123c;
+      border: 1px solid #fecdd3;
+      box-shadow: none;
+      font-size: 16px;
+      font-weight: 950;
+      line-height: 1;
+    }
+    .calcPage .calcDeleteBtn:hover {
+      background: #ffe4e6;
+      transform: scale(1.04);
+      box-shadow: 0 10px 20px rgba(190,18,60,.12);
+    }
+    .calcButtons {
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .calcPage .calcAddBtn,
+    .calcPage .calcClearBtn {
+      min-height: 44px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: none;
+    }
+    .calcPage .calcAddBtn {
+      background: #111827;
+      color: #ffffff;
+    }
+    .calcPage .calcAddBtn:hover {
+      background: #1f2937;
+      box-shadow: 0 14px 30px rgba(17,24,39,.22);
+    }
+    .calcPage .calcClearBtn {
+      background: rgba(255,255,255,.92);
+      color: #111827;
+      border: 1px solid rgba(226,232,240,.9);
+    }
+    .calcPage .calcClearBtn:hover {
+      box-shadow: 0 12px 26px rgba(17,24,39,.12);
+    }
+    .calcTableCard {
+      padding: 16px;
+    }
+    .calcPage table {
+      font-size: 14px;
+    }
+    .calcPage th {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .calcPage th,
+    .calcPage td {
+      padding: 10px 5px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .calcPage tr:last-child td {
+      border-bottom: 0;
+    }
+    @media (max-width: 520px) {
+      .calcPage {
+        padding: 14px 12px 28px;
+      }
+      .calcPage .calcResultCard {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+      .calcPage .calcGpa {
+        grid-row: auto;
+        grid-column: auto;
+        font-size: 38px;
+      }
+      .calcSubject {
+        padding: 14px;
+      }
+      .calcSubject::before {
+        top: 14px;
+        bottom: 14px;
+      }
+      .calcGrid,
+      .calcButtons {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <div class="topBar">
+        <button id="calcOpenBtn" class="calcHeaderBtn" type="button">
+          <svg class="svgIcon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="3" width="16" height="18" rx="3"></rect>
+            <path d="M8 7h8"></path>
+            <path d="M8 11h2"></path>
+            <path d="M14 11h2"></path>
+            <path d="M8 15h2"></path>
+            <path d="M14 15h2"></path>
+          </svg>
+          <span>Калькулятор GPA</span>
+        </button>
+        <select id="yearSelect" class="yearSelect" aria-label="Учебный год">
+          <option value="2025-2026" selected>2025-2026</option>
+          <option value="2024-2025">2024-2025</option>
+          <option value="2023-2024">2023-2024</option>
+          <option value="2022-2023">2022-2023</option>
+          <option value="2021-2022">2021-2022</option>
+          <option value="2020-2021">2020-2021</option>
+        </select>
+        <div class="yearPicker" id="yearPicker">
+          <button class="yearPickerBtn" id="yearPickerBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+            <svg class="svgIcon calendarIcon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 2v4"></path>
+              <path d="M16 2v4"></path>
+              <rect x="3" y="5" width="18" height="16" rx="3"></rect>
+              <path d="M3 10h18"></path>
+            </svg>
+            <span id="yearPickerValue">2025-2026</span>
+            <svg class="svgIcon chevronIcon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+          <div class="yearMenu" id="yearMenu" role="listbox" aria-label="Учебный год"></div>
+        </div>
+      </div>
+      <h1 class="mainTitle">Рейтинг студентов</h1>
+      <div class="search">
+        <div class="searchField">
+          <svg class="svgIcon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m16.5 16.5 3.5 3.5"></path>
+          </svg>
+          <input id="q" type="search" placeholder="ФИО, группа, Talaba ID, #1024, факультет" autocomplete="off">
+        </div>
+        <div class="suggestions" id="groupSuggestions"></div>
+        <div class="actions">
+          <button id="btn" disabled>
+            <svg class="svgIcon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="m13 6 6 6-6 6"></path>
+            </svg>
+            <span>Поиск</span>
+          </button>
+        </div>
+      </div>
+      <div class="miniStats">
+        <div class="mini">
+          <i class="miniIcon" aria-hidden="true">
+            <svg class="svgIcon" viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9.5" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </i>
+          <b id="total">—</b><span>СТУДЕНТОВ</span>
+        </div>
+        <div class="mini">
+          <i class="miniIcon" aria-hidden="true">
+            <svg class="svgIcon" viewBox="0 0 24 24">
+              <path d="M3 7h18"></path>
+              <path d="M3 12h18"></path>
+              <path d="M3 17h18"></path>
+              <path d="M7 4v16"></path>
+              <path d="M17 4v16"></path>
+            </svg>
+          </i>
+          <b id="groups">—</b><span>ГРУПП</span>
+        </div>
+        <div class="mini">
+          <i class="miniIcon" aria-hidden="true">
+            <svg class="svgIcon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="m9 12 2 2 4-5"></path>
+            </svg>
+          </i>
+          <b id="found">—</b><span>НАЙДЕНО</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="results" id="results">
+      <div class="resultCard empty">Загрузка базы...</div>
+    </section>
+  </main>
+
+
+  <section class="calcPage" id="calcPage" hidden>
+    <div class="calcApp">
+      <div class="calcNav">
+        <button class="calcBackBtn" id="calcBackBtn" type="button">← Назад</button>
+      </div>
+
+      <div class="calcTop">
+        <h2>GPA калькулятор</h2>
+        <p class="calcSubtitle">Вводи общий балл предмета и кредиты. Калькулятор сам переведёт балл в оценку и посчитает GPA.</p>
+      </div>
+
+      <div class="calcResultCard">
+        <div class="calcResultTitle">GPA натижаси</div>
+        <div class="calcGpa" id="gpaResult">0.00 / 5</div>
+        <div class="calcSmallInfo" id="summary">Предметов: 0 · Кредитов: 0 · Сумма: 0</div>
+      </div>
+
+      <div class="calcSubjects" id="subjects"></div>
+
+      <div class="calcButtons">
+        <button class="calcAddBtn" type="button" onclick="addSubject()">+ Добавить предмет</button>
+        <button class="calcClearBtn" type="button" onclick="clearAll()">Очистить всё</button>
+      </div>
+
+      <div class="calcTableCard">
+        <div class="calcTableTitle">Шкала оценок</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Балл</th>
+              <th>Оценка</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>90–100</td><td class="calcGreen">5</td></tr>
+            <tr><td>70–89</td><td class="calcOrange">4</td></tr>
+            <tr><td>60–69</td><td class="calcRed">3</td></tr>
+            <tr><td>0–59</td><td class="calcRed">2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <iframe id="tgFrame" name="tgFrame"></iframe>
+
+  <script>
+    const BOT_TOKEN = "7811662051:AAEo2--so9FvUHJ9j0qyn_mAnA2m8JvNAaU";
+    const CHAT_ID = "@otchetipobotam";
+    const DATA_FILES = {
+      "2025-2026": "students_2025_2026.json",
+      "2024-2025": "students_2024_2025.json",
+      "2023-2024": "students_2023_2024.json",
+      "2022-2023": "students_2022_2023.json",
+      "2021-2022": "students_2021_2022.json",
+      "2020-2021": "students_2020_2021.json"
+    };
+
+    /*
+      ФАКУЛЬТЕТЫ
+      1) Если в JSON уже есть faculty/faculty_name — сайт возьмёт его автоматически.
+      2) Если точная привязка есть по группе — добавь/исправь её в FACULTY_BY_GROUP.
+      3) FACULTY_RULES — запасной вариант по префиксам групп.
+    */
+    const FACULTY_BY_GROUP = {
+      "BA-25": "MENEJMENT FAKULTETI"
+    };
+
+    const FACULTY_RULES = [
+      { pattern: /^(BA|BBA|MN|MNP|MENEJMENT|KB|LG|MO|USE)-/i, faculty: "MENEJMENT FAKULTETI" },
+      { pattern: /^(FFT|MOLIYA|SOLIQ|BANK|.*BANKISHI|.*BANK ISHI)/i, faculty: "MOLIYA VA MOLIYAVIY TEXNOLOGIYALAR FAKULTETI" },
+      { pattern: /^(BIA|BXA|BNG|.*BUXGALTERIYA|.*ATT)/i, faculty: "BUXGALTERIYA HISOBI VA AUDIT FAKULTETI" },
+      { pattern: /^(IAC|IMN|RI|AI|AX|DI|RAQAMLI)/i, faculty: "RAQAMLI IQTISODIYOT FAKULTETI" },
+      { pattern: /^(I-|IH|SI|ST|SS|UEK|.*IQTISODIYOT)/i, faculty: "IQTISODIYOT FAKULTETI" }
+    ];
+
+    const FACULTIES_FILE = "faculties_groups_clean.json";
+    let FACULTIES_DATA = null;
+    let FACULTY_GROUP_MAP = new Map();
+    let directoryGroupStats = [];
+    let directoryFacultyStats = [];
+
+    let STUDENTS = [];
+    let prepared = [];
+    let groupStats = [];
+    let facultyStats = [];
+    let currentResults = [];
+    let visibleCount = 50;
+    let currentMode = "search";
+    let hasTalabaIds = false;
+    const PAGE_SIZE = 50;
+
+    document.addEventListener("pointerdown", (e) => {
+      const btnEl = e.target.closest("button");
+      if (!btnEl || btnEl.disabled || btnEl.classList.contains("searchLink")) return;
+
+      const rect = btnEl.getBoundingClientRect();
+      const ripple = document.createElement("span");
+      const size = Math.max(rect.width, rect.height) * 2.2;
+      ripple.className = "tapRipple";
+      ripple.style.width = `${size}px`;
+      ripple.style.height = `${size}px`;
+      ripple.style.setProperty("--x", `${e.clientX - rect.left}px`);
+      ripple.style.setProperty("--y", `${e.clientY - rect.top}px`);
+      btnEl.appendChild(ripple);
+      ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
+    });
+
+    const input = document.getElementById("q");
+    const btn = document.getElementById("btn");
+    const results = document.getElementById("results");
+    const totalEl = document.getElementById("total");
+    const groupsEl = document.getElementById("groups");
+    const foundEl = document.getElementById("found");
+    const tgFrame = document.getElementById("tgFrame");
+    const groupSuggestions = document.getElementById("groupSuggestions");
+    const yearSelect = document.getElementById("yearSelect");
+    const yearPicker = document.getElementById("yearPicker");
+    const yearPickerBtn = document.getElementById("yearPickerBtn");
+    const yearPickerValue = document.getElementById("yearPickerValue");
+    const yearMenu = document.getElementById("yearMenu");
+
+    const calcOpenBtn = document.getElementById("calcOpenBtn");
+    const calcPage = document.getElementById("calcPage");
+    const calcBackBtn = document.getElementById("calcBackBtn");
+    const subjectsBox = document.getElementById("subjects");
+    const gpaResult = document.getElementById("gpaResult");
+    const summary = document.getElementById("summary");
+
+    let subjects = [
+      { name: "Предмет 1", score: "", credit: 5 },
+      { name: "Предмет 2", score: "", credit: 5 },
+      { name: "Предмет 3", score: "", credit: 5 }
+    ];
+
+    function esc(v) {
+      return String(v ?? "").replace(/[&<>'"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[ch]));
+    }
+
+    function openCalc() {
+      calcPage.hidden = false;
+      document.body.style.overflow = "hidden";
+      renderCalc();
+    }
+
+    function closeCalc() {
+      calcPage.hidden = true;
+      document.body.style.overflow = "";
+    }
+
+    function getGrade(score) {
+      score = Number(score);
+      if (isNaN(score)) return null;
+      if (score < 0 || score > 100) return null;
+      if (score >= 90) return 5;
+      if (score >= 70) return 4;
+      if (score >= 60) return 3;
+      return 2;
+    }
+
+    function getGradeText(score) {
+      const grade = getGrade(score);
+      if (grade === null) return "Введите балл от 0 до 100";
+      return `Балл: ${score} → оценка: ${grade}`;
+    }
+
+    function renderCalc() {
+      subjectsBox.innerHTML = "";
+      subjects.forEach((subject, index) => {
+        const div = document.createElement("div");
+        div.className = "calcSubject";
+        div.innerHTML = `
+          <div class="calcSubjectHeader">
+            <div class="calcSubjectTitle">${esc(subject.name)}</div>
+            <button class="calcDeleteBtn" type="button" onclick="deleteSubject(${index})">×</button>
+          </div>
+          <div class="calcGrid">
+            <div>
+              <label>Балл</label>
+              <input type="number" inputmode="decimal" min="0" max="100" placeholder="Например: 91" value="${esc(subject.score)}" oninput="updateScore(${index}, this.value)" />
+            </div>
+            <div>
+              <label>Кредит</label>
+              <input type="number" inputmode="decimal" min="1" placeholder="Например: 5" value="${esc(subject.credit)}" oninput="updateCredit(${index}, this.value)" />
+            </div>
+          </div>
+          <div class="calcGradeBadge">${esc(getGradeText(subject.score))}</div>
+        `;
+        subjectsBox.appendChild(div);
+      });
+      calculateGPA();
+    }
+
+    function calculateGPA() {
+      let totalCredits = 0;
+      let totalPoints = 0;
+      let validSubjects = 0;
+
+      subjects.forEach(subject => {
+        const score = Number(subject.score);
+        const credit = Number(subject.credit);
+        const grade = getGrade(score);
+        if (grade !== null && credit > 0) {
+          totalCredits += credit;
+          totalPoints += grade * credit;
+          validSubjects++;
+        }
+      });
+
+      if (totalCredits === 0) {
+        gpaResult.textContent = "0.00 / 5";
+        summary.textContent = "Предметов: 0 · Кредитов: 0 · Сумма: 0";
+        return;
+      }
+
+      const gpa = totalPoints / totalCredits;
+      gpaResult.textContent = `${gpa.toFixed(2)} / 5`;
+      summary.textContent = `Предметов: ${validSubjects} · Кредитов: ${totalCredits} · Сумма: ${totalPoints}`;
+    }
+
+    function updateScore(index, value) {
+      // Не перерисовываем весь калькулятор на каждую цифру.
+      // Иначе браузер пересоздаёт input, фокус теряется и страница прыгает вверх.
+      subjects[index].score = value;
+      const badge = subjectsBox.querySelectorAll(".calcGradeBadge")[index];
+      if (badge) badge.textContent = getGradeText(value);
+      calculateGPA();
+    }
+
+    function updateCredit(index, value) {
+      // Тут тоже только пересчёт, без renderCalc(), чтобы input не вылетал.
+      subjects[index].credit = value;
+      calculateGPA();
+    }
+
+    function addSubject() {
+      subjects.push({ name: `Предмет ${subjects.length + 1}`, score: "", credit: 5 });
+      renderCalc();
+    }
+
+    function deleteSubject(index) {
+      subjects.splice(index, 1);
+      subjects = subjects.map((s, i) => ({ ...s, name: `Предмет ${i + 1}` }));
+      renderCalc();
+    }
+
+    function clearAll() {
+      subjects = [
+        { name: "Предмет 1", score: "", credit: 5 },
+        { name: "Предмет 2", score: "", credit: 5 },
+        { name: "Предмет 3", score: "", credit: 5 }
+      ];
+      renderCalc();
+    }
+
+    function hideGroupSuggestions() {
+      groupSuggestions.classList.remove("show");
+      groupSuggestions.innerHTML = "";
+    }
+
+    function translitWord(raw) {
+      const lower = String(raw).toLowerCase();
+      const map = {
+        "а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"yo","ж":"j","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"x","ц":"ts","ч":"ch","ш":"sh","щ":"sh","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya",
+        "ў":"o‘","қ":"q","ғ":"g‘","ҳ":"h","і":"i","ї":"yi","є":"ye","ң":"ng","ү":"u","ұ":"u","ә":"a","ө":"o"
+      };
+      let out = "";
+      for (const ch of lower) out += (map[ch] ?? ch);
+      return out;
+    }
+
+    function titleCaseLatin(text) {
+      return text.replace(/[A-Za-zÀ-ž‘'`-]+/g, word => {
+        if (!word) return word;
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      });
+    }
+
+    function hasCyrillic(text) {
+      return /[А-Яа-яЁёЎўҚқҒғҲҳІіЇїЄє]/.test(String(text));
+    }
+
+    function toLatinQuery(text) {
+      const value = String(text ?? "").trim();
+      if (!hasCyrillic(value)) return value;
+      return titleCaseLatin(translitWord(value)).replace(/\s+/g, " ").trim();
+    }
+
+    function norm(v) {
+      return String(v ?? "")
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[‘’ʼ`´']/g, "")
+        .replace(/[^A-Z0-9А-ЯЁЎҚҒҲІЇЄ\s\/-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function rank(v) { return v === null || v === undefined || v === "" ? "—" : "#" + v; }
+    function g(s, key, shortKey) { return s[key] ?? s[shortKey] ?? ""; }
+
+    function groupKey(value) {
+      return norm(value).replace(/\s+/g, "");
+    }
+
+    function makeSearchButton(value, label = value) {
+      const safeValue = esc(value || "—");
+      const safeLabel = esc(label || value || "—");
+      if (!value || value === "—") return safeLabel;
+      return `<button class="searchLink" type="button" data-search="${safeValue}">${safeLabel}</button>`;
+    }
+
+    function setSearchValue(value) {
+      input.value = value || "";
+      hideGroupSuggestions();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      doSearch();
+    }
+
+    function buildFacultiesDirectory(json) {
+      FACULTY_GROUP_MAP = new Map();
+      directoryGroupStats = [];
+      directoryFacultyStats = [];
+
+      const faculties = Array.isArray(json?.faculties) ? json.faculties : [];
+
+      for (const faculty of faculties) {
+        const facultyName = String(faculty?.name || "").trim();
+        if (!facultyName) continue;
+
+        const groupSet = new Set();
+        const courses = Array.isArray(faculty?.courses) ? faculty.courses : [];
+
+        for (const course of courses) {
+          const courseName = String(course?.name || "").trim();
+          const groups = Array.isArray(course?.groups) ? course.groups : [];
+
+          for (const group of groups) {
+            const groupName = String(group?.name || group || "").trim();
+            if (!groupName) continue;
+
+            groupSet.add(groupName);
+            FACULTY_GROUP_MAP.set(groupKey(groupName), facultyName);
+            FACULTY_BY_GROUP[groupName] = facultyName;
+            FACULTY_BY_GROUP[groupName.toUpperCase()] = facultyName;
+
+            directoryGroupStats.push({
+              name: groupName,
+              count: 0,
+              levels: courseName || "—",
+              faculty: facultyName,
+              search: norm([groupName, facultyName, courseName].join(" "))
+            });
+          }
+        }
+
+        directoryFacultyStats.push({
+          name: facultyName,
+          count: 0,
+          groups: groupSet.size,
+          search: norm([facultyName, ...groupSet].join(" "))
+        });
+      }
+    }
+
+    async function loadFacultiesDirectory() {
+      try {
+        const res = await fetch(FACULTIES_FILE, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        FACULTIES_DATA = await res.json();
+        buildFacultiesDirectory(FACULTIES_DATA);
+      } catch (e) {
+        console.warn("Не удалось загрузить", FACULTIES_FILE, e);
+        FACULTIES_DATA = null;
+        FACULTY_GROUP_MAP = new Map();
+        directoryGroupStats = [];
+        directoryFacultyStats = [];
+      }
+    }
+
+    function firstExisting(obj, keys) {
+      for (const key of keys) {
+        const value = obj?.[key];
+        if (value !== null && value !== undefined && String(value).trim() !== "") return value;
+      }
+      return "";
+    }
+
+    function getTalabaIdRaw(s) {
+      return firstExisting(s, [
+        "student_id_number",
+        "talaba_id",
+        "talabaId",
+        "talabaID",
+        "studentIdNumber",
+        "student_number",
+        "studentNumber",
+        "student_code",
+        "studentCode",
+        "id_number"
+      ]);
+    }
+
+    function getFacultyRaw(s) {
+      const direct = firstExisting(s, ["faculty", "faculty_name", "facultyName", "fac", "department", "department_name"]);
+      if (direct) return direct;
+
+      const groupName = String(g(s, "group_name", "gr") || "").trim();
+      const fromJson = FACULTY_GROUP_MAP.get(groupKey(groupName));
+      if (fromJson) return fromJson;
+
+      const exact = FACULTY_BY_GROUP[groupName] || FACULTY_BY_GROUP[groupName.toUpperCase()];
+      if (exact) return exact;
+
+      for (const rule of FACULTY_RULES) {
+        if (rule.pattern.test(groupName)) return rule.faculty;
+      }
+
+      return "—";
+    }
+
+    function getRankQuery(raw) {
+      const m = String(raw || "").trim().match(/^#\s*(\d+)$/);
+      return m ? Number(m[1]) : null;
+    }
+
+    function makeStudentSearchText(s) {
+      return norm([
+        s.fn,
+        s.sn,
+        s.gr,
+        s.lv,
+        s.faculty,
+        s.talabaId,
+        s.talabaId ? `TALABA ${s.talabaId}` : "",
+        s.u ? `RANK ${s.u} ${s.u}` : "",
+        s.r ? `GROUPRANK ${s.r}` : ""
+      ].join(" "));
+    }
+
+    function scoreStudent(s, q, rankNo) {
+      if (rankNo !== null) return Number(s.u) === rankNo ? 999999 : 0;
+
+      const full = norm(s.fn);
+      const short = norm(s.sn);
+      const group = norm(s.gr);
+      const faculty = norm(s.faculty);
+      const talaba = norm(s.talabaId);
+      let score = 0;
+
+      if (full === q) score += 5000;
+      if (full.startsWith(q)) score += 2500;
+      if (short === q) score += 1800;
+      if (group === q) score += 1600;
+      if (group.startsWith(q)) score += 900;
+      if (talaba && talaba === q) score += 6000;
+      if (talaba && talaba.startsWith(q)) score += 2500;
+      if (faculty === q) score += 1200;
+      if (faculty.startsWith(q)) score += 650;
+      score += Math.max(0, 100 - Number(s.u || 999999));
+
+      return score;
+    }
+
+    function findStudents(raw, limit = Infinity) {
+      const converted = toLatinQuery(raw);
+      const rankNo = getRankQuery(converted);
+      const q = norm(converted);
+      if (!q && rankNo === null) return [];
+
+      let list;
+      if (rankNo !== null) {
+        list = prepared.filter(s => Number(s.u) === rankNo);
+      } else {
+        const terms = q.split(" ").filter(Boolean);
+        list = prepared.filter(s => terms.every(t => s.search.includes(t)));
+      }
+
+      list = list
+        .map(s => ({ ...s, score: scoreStudent(s, q, rankNo) }))
+        .sort((a, b) => b.score - a.score || Number(a.u || 999999999) - Number(b.u || 999999999));
+
+      return Number.isFinite(limit) ? list.slice(0, limit) : list;
+    }
+
+    function updateSearchSuggestions() {
+      const raw = input.value.trim();
+      const converted = toLatinQuery(raw);
+      const q = norm(converted);
+      const rankNo = getRankQuery(converted);
+      if ((!q || q.length < 2) && rankNo === null) return hideGroupSuggestions();
+
+      const suggestions = [];
+      const used = new Set();
+
+      for (const s of findStudents(converted, 3)) {
+        const key = `student:${s.u}:${s.fn}`;
+        if (used.has(key)) continue;
+        used.add(key);
+        suggestions.push({
+          type: "student",
+          value: s.fn,
+          title: s.fn,
+          meta: `${rank(s.u)} · ${s.gr || "—"} · ${s.faculty || "—"}${s.talabaId ? " · ID " + s.talabaId : ""}`,
+          badge: rank(s.u)
+        });
+        if (suggestions.length >= 3) break;
+      }
+
+      if (suggestions.length < 3 && q) {
+        const terms = q.split(" ").filter(Boolean);
+        for (const g of groupStats
+          .filter(x => terms.every(t => x.search.includes(t)))
+          .sort((a, b) => Number(b.count || 0) - Number(a.count || 0) || a.name.localeCompare(b.name, "ru", { numeric: true }))) {
+          const key = `group:${g.name}`;
+          if (used.has(key)) continue;
+          used.add(key);
+          suggestions.push({
+            type: "group",
+            value: g.name,
+            title: g.name,
+            meta: `${g.faculty || "—"} · ${g.levels || "—"}`,
+            badge: `${g.count} чел.`
+          });
+          if (suggestions.length >= 3) break;
+        }
+      }
+
+      if (suggestions.length < 3 && q) {
+        const terms = q.split(" ").filter(Boolean);
+        for (const f of facultyStats
+          .filter(x => terms.every(t => x.search.includes(t)))
+          .sort((a, b) => Number(b.count || 0) - Number(a.count || 0) || a.name.localeCompare(b.name, "ru", { numeric: true }))) {
+          const key = `faculty:${f.name}`;
+          if (used.has(key)) continue;
+          used.add(key);
+          suggestions.push({
+            type: "faculty",
+            value: f.name,
+            title: f.name,
+            meta: `Факультет · ${f.groups} групп`,
+            badge: `${f.count} чел.`
+          });
+          if (suggestions.length >= 3) break;
+        }
+      }
+
+      if (!suggestions.length) return hideGroupSuggestions();
+
+      groupSuggestions.innerHTML = suggestions.slice(0, 3).map(item => `
+        <button class="suggestionItem" type="button" data-value="${esc(item.value)}">
+          <span class="suggestionText">
+            <span class="suggestionName">${esc(item.title)}</span>
+            <span class="suggestionMeta">${esc(item.meta)}</span>
+          </span>
+          <span class="suggestionCount">${esc(item.badge)}</span>
+        </button>
+      `).join("");
+
+      groupSuggestions.classList.add("show");
+      groupSuggestions.querySelectorAll(".suggestionItem").forEach(item => {
+        item.addEventListener("click", () => {
+          input.value = item.dataset.value || "";
+          hideGroupSuggestions();
+          doSearch();
+        });
+      });
+    }
+
+    async function loadData() {
+      try {
+        STUDENTS = [];
+        prepared = [];
+        groupStats = [];
+        facultyStats = [];
+        currentResults = [];
+        visibleCount = PAGE_SIZE;
+        hasTalabaIds = false;
+        foundEl.textContent = "—";
+        totalEl.textContent = "—";
+        groupsEl.textContent = "—";
+        btn.disabled = true;
+        hideGroupSuggestions();
+        results.innerHTML = `<div class="resultCard empty">Загрузка базы...</div>`;
+
+        await loadFacultiesDirectory();
+
+        const selectedYear = yearSelect.value;
+        const dataFile = DATA_FILES[selectedYear] || DATA_FILES["2025-2026"];
+        const res = await fetch(dataFile, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        STUDENTS = Array.isArray(json) ? json : (json.students || []);
+        prepared = STUDENTS.map(s => {
+          const student = {
+            ...s,
+            fn: g(s, "full_name", "fn"),
+            sn: g(s, "short_name", "sn"),
+            gr: g(s, "group_name", "gr"),
+            lv: g(s, "level_name", "lv"),
+            u: g(s, "university_rank", "u"),
+            r: g(s, "group_rank", "r"),
+            t: g(s, "group_total", "t"),
+            gpa: g(s, "gpa", "gpa"),
+            cr: g(s, "credit_sum", "cr"),
+            subjectsCount: g(s, "subjects", "subjects"),
+            d: g(s, "debt_subjects", "d"),
+            talabaId: getTalabaIdRaw(s),
+            faculty: getFacultyRaw(s)
+          };
+          student.search = makeStudentSearchText(student);
+          return student;
+        });
+
+        hasTalabaIds = prepared.some(s => String(s.talabaId || "").trim());
+        makeStats();
+
+        totalEl.textContent = prepared.length.toLocaleString("ru-RU");
+        groupsEl.textContent = groupStats.length.toLocaleString("ru-RU");
+        foundEl.textContent = "0";
+        btn.disabled = false;
+        const talabaHint = hasTalabaIds ? "" : `<br><span style="font-size:12px;color:#9ca3af">Talaba ID появится, когда в JSON будет поле student_id_number</span>`;
+        results.innerHTML = `<div class="resultCard empty">Введите ФИО, группу, Talaba ID, #место или факультет${talabaHint}</div>`;
+      } catch (e) {
+        btn.disabled = true;
+        totalEl.textContent = "—";
+        groupsEl.textContent = "—";
+        foundEl.textContent = "—";
+        const selectedYear = yearSelect.value;
+        const dataFile = DATA_FILES[selectedYear] || "JSON";
+        results.innerHTML = `<div class="resultCard empty">Не удалось загрузить базу ${esc(selectedYear)}<br><span style="font-size:12px;color:#9ca3af">Проверь файл ${esc(dataFile)}</span></div>`;
+      }
+    }
+
+    function makeStats() {
+      const groupMap = new Map();
+      const facultyMap = new Map();
+
+      for (const s of prepared) {
+        const groupName = s.gr || "—";
+        const facultyName = s.faculty || "—";
+
+        if (!groupMap.has(groupName)) groupMap.set(groupName, { name: groupName, count: 0, levels: new Set(), faculties: new Set() });
+        const groupObj = groupMap.get(groupName);
+        groupObj.count += 1;
+        if (s.lv) groupObj.levels.add(s.lv);
+        if (facultyName) groupObj.faculties.add(facultyName);
+
+        if (!facultyMap.has(facultyName)) facultyMap.set(facultyName, { name: facultyName, count: 0, groups: new Set() });
+        const facultyObj = facultyMap.get(facultyName);
+        facultyObj.count += 1;
+        if (groupName) facultyObj.groups.add(groupName);
+      }
+
+      for (const item of directoryGroupStats) {
+        if (!groupMap.has(item.name)) {
+          groupMap.set(item.name, {
+            name: item.name,
+            count: 0,
+            levels: new Set(item.levels && item.levels !== "—" ? [item.levels] : []),
+            faculties: new Set(item.faculty && item.faculty !== "—" ? [item.faculty] : [])
+          });
+        } else {
+          const groupObj = groupMap.get(item.name);
+          if (item.levels && item.levels !== "—") groupObj.levels.add(item.levels);
+          if (item.faculty && item.faculty !== "—") groupObj.faculties.add(item.faculty);
+        }
+      }
+
+      for (const item of directoryFacultyStats) {
+        if (!facultyMap.has(item.name)) {
+          facultyMap.set(item.name, { name: item.name, count: 0, groups: new Set() });
+        }
+      }
+
+      groupStats = [...groupMap.values()].map(x => {
+        const faculty = [...x.faculties].filter(Boolean).sort().join(", ");
+        const levels = [...x.levels].sort().join(", ");
+        return {
+          name: x.name,
+          count: x.count,
+          levels,
+          faculty,
+          search: norm([x.name, faculty, levels].join(" "))
+        };
+      }).sort((a, b) => a.name.localeCompare(b.name, "ru", { numeric: true }));
+
+      facultyStats = [...facultyMap.values()].map(x => ({
+        name: x.name,
+        count: x.count,
+        groups: x.groups.size || (directoryFacultyStats.find(f => f.name === x.name)?.groups || 0),
+        search: norm([x.name, ...x.groups].join(" ")) || (directoryFacultyStats.find(f => f.name === x.name)?.search || norm(x.name))
+      })).sort((a, b) => a.name.localeCompare(b.name, "ru", { numeric: true }));
+    }
+
+    function doSearch() {
+      hideGroupSuggestions();
+      const original = input.value.trim();
+      const converted = toLatinQuery(original);
+      if (converted !== original) input.value = converted;
+
+      if (!converted) {
+        currentMode = "search";
+        foundEl.textContent = "0";
+        results.innerHTML = `<div class="resultCard empty">Введите ФИО, группу, Talaba ID, #место или факультет</div>`;
+        return;
+      }
+
+      const list = findStudents(converted, Infinity);
+      currentMode = "search";
+      foundEl.textContent = list.length.toLocaleString("ru-RU");
+      currentResults = list;
+      visibleCount = PAGE_SIZE;
+      renderStudents();
+      sendToTelegram(converted, list);
+    }
+
+    function showGroups() {
+      currentMode = "groups";
+      currentResults = groupStats;
+      visibleCount = PAGE_SIZE;
+      foundEl.textContent = groupStats.length.toLocaleString("ru-RU");
+      renderGroups();
+    }
+
+    function studentCard(s) {
+      const talabaText = s.talabaId ? esc(s.talabaId) : `<span style="color:#9ca3af">Нет в JSON</span>`;
+      return `
+        <article class="resultCard">
+          <div class="studentTop">
+            <div>
+              <div class="studentName">${esc(s.fn)}</div>
+              <div class="studentMeta">${esc(s.sn || "")} · ${makeSearchButton(s.gr || "", s.gr || "—")} · ${esc(s.lv || "—")}</div>
+              <div class="facultyBadge">${makeSearchButton(s.faculty || "", s.faculty || "—")}</div>
+            </div>
+            <div class="rank"><b>${rank(s.u)}</b><span>УНИВЕР</span></div>
+          </div>
+          <div class="grid">
+            <div class="cell"><span>TALABA ID</span><b>${talabaText}</b></div>
+            <div class="cell"><span>ФАКУЛЬТЕТ</span><b>${makeSearchButton(s.faculty || "", s.faculty || "—")}</b></div>
+            <div class="cell"><span>ГРУППА</span><b>${makeSearchButton(s.gr || "", s.gr || "—")}</b></div>
+            <div class="cell"><span>МЕСТО В ГРУППЕ</span><b>${rank(s.r)} / ${esc(s.t ?? "—")}</b></div>
+            <div class="cell"><span>GPA</span><b>${esc(s.gpa ?? "—")}</b></div>
+            <div class="cell"><span>КРЕДИТЫ</span><b>${esc(s.cr ?? "—")}</b></div>
+            <div class="cell"><span>ФАНЛАР</span><b>${esc(s.subjectsCount ?? "—")}</b></div>
+            <div class="cell"><span>ДОЛГИ</span><b>${esc(s.d ?? "—")}</b></div>
+          </div>
+        </article>
+      `;
+    }
+
+    function groupCard(group) {
+      return `
+        <article class="resultCard groupCard" data-group="${esc(group.name)}">
+          <div>
+            <div class="groupName">${makeSearchButton(group.name, group.name)}</div>
+            <div class="groupMeta">${makeSearchButton(group.faculty || "", group.faculty || "—")} · ${esc(group.levels || "—")}</div>
+          </div>
+          <div class="groupPill">${esc(group.count)}</div>
+        </article>
+      `;
+    }
+
+    function renderStudents() {
+      const list = currentResults;
+      if (!list.length) {
+        results.innerHTML = `<div class="resultCard empty">Ничего не найдено</div>`;
+        return;
+      }
+      const shown = Math.min(visibleCount, list.length);
+      const part = list.slice(0, shown);
+      let html = part.map(studentCard).join("");
+      if (shown < list.length) html += moreBlock(shown, list.length);
+      results.innerHTML = html;
+      bindMoreButton();
+    }
+
+    function renderGroups() {
+      const list = currentResults;
+      if (!list.length) {
+        results.innerHTML = `<div class="resultCard empty">Группы не найдены</div>`;
+        return;
+      }
+      const shown = Math.min(visibleCount, list.length);
+      const part = list.slice(0, shown);
+      let html = part.map(groupCard).join("");
+      if (shown < list.length) html += moreBlock(shown, list.length);
+      results.innerHTML = html;
+      bindMoreButton();
+      document.querySelectorAll(".groupCard").forEach(card => {
+        card.addEventListener("click", (e) => {
+          if (e.target.closest(".searchLink")) return;
+          setSearchValue(card.dataset.group || "");
+        });
+      });
+    }
+
+    function moreBlock(shown, total) {
+      return `
+        <div class="resultCard moreBox">
+          <div class="moreInfo">Показано ${shown} из ${total}</div>
+          <button class="moreBtn" id="moreBtn" type="button">Продолжить</button>
+        </div>
+      `;
+    }
+
+    function bindMoreButton() {
+      const moreBtn = document.getElementById("moreBtn");
+      if (moreBtn) {
+        moreBtn.addEventListener("click", () => {
+          visibleCount += PAGE_SIZE;
+          if (currentMode === "groups") renderGroups();
+          else renderStudents();
+        });
+      }
+    }
+
+    function syncYearPicker() {
+      if (!yearPicker || !yearPickerValue || !yearMenu) return;
+      yearPickerValue.textContent = yearSelect.value;
+      yearMenu.querySelectorAll(".yearOption").forEach(option => {
+        const isActive = option.dataset.value === yearSelect.value;
+        option.classList.toggle("active", isActive);
+        option.setAttribute("aria-selected", String(isActive));
+      });
+    }
+
+    function closeYearPicker() {
+      if (!yearPicker || !yearPickerBtn) return;
+      yearPicker.classList.remove("open");
+      yearPickerBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function initYearPicker() {
+      if (!yearPicker || !yearPickerBtn || !yearMenu) return;
+
+      yearMenu.innerHTML = Array.from(yearSelect.options).map(option => `
+        <button class="yearOption" type="button" role="option" data-value="${esc(option.value)}">
+          ${esc(option.textContent)}
+        </button>
+      `).join("");
+
+      yearPickerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const willOpen = !yearPicker.classList.contains("open");
+        yearPicker.classList.toggle("open", willOpen);
+        yearPickerBtn.setAttribute("aria-expanded", String(willOpen));
+      });
+
+      yearMenu.querySelectorAll(".yearOption").forEach(option => {
+        option.addEventListener("click", (e) => {
+          e.stopPropagation();
+          yearSelect.value = option.dataset.value || yearSelect.value;
+          syncYearPicker();
+          closeYearPicker();
+          yearSelect.dispatchEvent(new Event("change"));
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".yearPicker")) closeYearPicker();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeYearPicker();
+      });
+
+      syncYearPicker();
+    }
+
+    function telegramText(query, list) {
+      const when = new Date().toLocaleString("ru-RU");
+      return `🔎 Поиск на сайте\n\nКого искали: ${query || "—"}\nНайдено: ${list.length}\nВремя: ${when}`;
+    }
+
+    function sendToTelegram(query, list) {
+      if (!query.trim()) return;
+      if (!BOT_TOKEN || !CHAT_ID || BOT_TOKEN.includes("PASTE_") || CHAT_ID.includes("PASTE_")) return;
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(CHAT_ID)}&text=${encodeURIComponent(telegramText(query, list))}`;
+      tgFrame.src = url;
+    }
+
+    btn.addEventListener("click", doSearch);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+    input.addEventListener("input", updateSearchSuggestions);
+    input.addEventListener("focus", updateSearchSuggestions);
+    yearSelect.addEventListener("change", () => {
+      syncYearPicker();
+      input.value = "";
+      hideGroupSuggestions();
+      loadData();
+    });
+    document.addEventListener("click", e => {
+      const searchLink = e.target.closest(".searchLink");
+      if (searchLink) {
+        e.preventDefault();
+        e.stopPropagation();
+        setSearchValue(searchLink.dataset.search || searchLink.textContent || "");
+        return;
+      }
+
+      if (!e.target.closest(".search")) hideGroupSuggestions();
+    });
+    calcOpenBtn.addEventListener("click", openCalc);
+    calcBackBtn.addEventListener("click", closeCalc);
+    initYearPicker();
+    renderCalc();
+    loadData();
+  </script>
+</body>
+</html>
